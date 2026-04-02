@@ -1,0 +1,171 @@
+<section class="hero"
+  style="min-height: 40vh; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: var(--white);">
+  <div class="container" style="text-align: center; z-index: 2;">
+    <h1 style="margin-bottom: 1rem; color: white;">Online Services</h1>
+    <p style="color: rgba(255,255,255,0.8); max-width: 600px; margin: 0 auto;">Connect with our world-class experts
+      virtually from the comfort of your home.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="services-grid" id="online-services-list">
+      <p style="text-align: center; width: 100%; color: var(--text-light);">Loading exquisite virtual services...</p>
+    </div>
+  </div>
+</section>
+
+<!-- Booking Modal -->
+<div id="bookingModal"
+  style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center;">
+  <div
+    style="background: white; padding: 2.5rem; border-radius: 20px; width: 90%; max-width: 450px; box-shadow: var(--shadow-lg); position: relative;">
+    <button onclick="closeModal()"
+      style="position: absolute; top: 1rem; right: 1.5rem; background: transparent; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-light);">&times;</button>
+    <h3 style="margin-bottom: 0.5rem;" id="modalServiceName">Service Name</h3>
+    <p style="color: var(--primary); font-weight: 600; margin-bottom: 0.5rem;" id="modalServicePrice">$0</p>
+    <div
+      style="background: #e3f2fd; color: #1976d2; padding: 0.8rem; border-radius: 10px; font-size: 0.85rem; margin-bottom: 1.5rem;">
+      <span style="font-weight: 600;">Note:</span> A secure Google Meet link will be generated automatically upon
+      booking and available in your Dashboard.
+    </div>
+
+    <div class="form-group">
+      <label>Select Date</label>
+      <input type="date" id="bookingDate" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+      <label>Select Time Slot</label>
+      <select id="bookingTime" class="form-control" required style="background: white;">
+        <option value="" disabled selected>Select a time</option>
+        <option value="09:00 AM">09:00 AM - 10:00 AM</option>
+        <option value="10:00 AM">10:00 AM - 11:00 AM</option>
+        <option value="11:30 AM">11:30 AM - 12:30 PM</option>
+        <option value="02:00 PM">02:00 PM - 03:00 PM</option>
+        <option value="03:30 PM">03:30 PM - 04:30 PM</option>
+        <option value="05:00 PM">05:00 PM - 06:00 PM</option>
+      </select>
+    </div>
+
+    <input type="hidden" id="bookingServiceId">
+
+    <button onclick="confirmBooking()" class="btn btn-primary"
+      style="width: 100%; margin-top: 1rem; background: #1e3c72; border: none;">Confirm Virtual Booking</button>
+  </div>
+</div>
+
+<script>
+  // Set minimum date to today
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('bookingDate').setAttribute('min', today);
+
+  const targetOnlineServices = [
+    "Online yoga sessions", "Virtual consultation", "Personalized diet plans",
+    "Lifestyle coaching", "Stress management sessions"
+  ];
+
+  async function fetchOnlineServices() {
+    try {
+      const res = await fetch('/api/services');
+      const data = await res.json();
+
+      const list = document.getElementById('online-services-list');
+
+      if (data.success && data.count > 0) {
+        let html = '';
+        const defaultImages = [
+          'https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?auto=format&fit=crop&q=80&w=800',
+          'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=800',
+          'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&q=80&w=800'
+        ];
+
+        // Filter for specific online services
+        const onlineData = data.data.filter(srv => targetOnlineServices.includes(srv.name));
+
+        if (onlineData.length === 0) {
+          list.innerHTML = '<p style="color: var(--text-light); text-align: center; width: 100%;">No virtual services available at the moment.</p>';
+          return;
+        }
+
+        onlineData.forEach((srv, index) => {
+          const img = srv.image && srv.image !== '/images/default-service.jpg'
+            ? srv.image
+            : defaultImages[index % defaultImages.length];
+
+          html += `
+            <div class="service-card" style="position: relative;">
+               <div style="position: absolute; top: 1rem; right: 1rem; background: rgba(255,255,255,0.9); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: #1e3c72; box-shadow: var(--shadow-sm); z-index: 5;">Virtual 🌐</div>
+              <div class="service-img" style="background-image: url('${img}'); height: 160px; filter: brightness(1.05);"></div>
+              <div class="service-content">
+                <span class="service-cat" style="color: #1e3c72;">${srv.category} | ${srv.duration} mins</span>
+                <h3>${srv.name}</h3>
+                <p style="font-size: 0.95rem;">${srv.description}</p>
+                <div class="service-footer">
+                  <span class="price" style="color: #1e3c72;">$${srv.price}</span>
+                  <button class="btn btn-primary" style="padding: 0.5rem 1.2rem; font-size: 0.9rem; background: #1e3c72; border: none;" onclick="openBookingModal('${srv._id}', '${srv.name.replace(/'/g, "\\'")}', ${srv.price})">Book Virtual Slot</button>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        list.innerHTML = html;
+      } else {
+        list.innerHTML = '<p style="color: var(--text-light); text-align: center; width: 100%;">No services available at the moment.</p>';
+      }
+    } catch (err) {
+      console.log(err);
+      document.getElementById('online-services-list').innerHTML = '<p style="color: red; text-align: center; width: 100%;">Failed to load services.</p>';
+    }
+  }
+
+  function openBookingModal(id, name, price) {
+    document.getElementById('bookingServiceId').value = id;
+    document.getElementById('modalServiceName').textContent = name;
+    document.getElementById('modalServicePrice').textContent = '$' + price;
+
+    document.getElementById('bookingModal').style.display = 'flex';
+  }
+
+  function closeModal() {
+    document.getElementById('bookingModal').style.display = 'none';
+  }
+
+  async function confirmBooking() {
+    const serviceId = document.getElementById('bookingServiceId').value;
+    const dateStr = document.getElementById('bookingDate').value;
+    const timeStr = document.getElementById('bookingTime').value;
+
+    if (!dateStr || !timeStr) {
+      alert("Please select both a valid date and a time slot.");
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/appointments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ serviceId, date: dateStr, time: timeStr })
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert('Virtual Appointment Booked Successfully! Your Meet link is in the dashboard.');
+        window.location.href = '/dashboard';
+      } else {
+        if (res.status === 401) {
+          alert('You must be logged in to book an appointment.');
+          window.location.href = '/login';
+        } else {
+          alert('Booking failed: ' + data.message);
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error booking appointment');
+    }
+  }
+
+  fetchOnlineServices();
+</script>

@@ -1,0 +1,91 @@
+<div class="container" style="min-height: 70vh; padding: 4rem 0;">
+  <div class="dash-header">
+    <h2>Welcome Home.</h2>
+    <a href="/services" class="btn btn-primary">Book New Service</a>
+  </div>
+
+  <div class="dashboard-grid">
+    <aside class="sidebar">
+      <h3>Quick Links</h3>
+      <ul class="sidebar-nav">
+        <li><a href="/dashboard" class="active">My Appointments</a></li>
+        <li><a href="/profile">Profile Settings</a></li>
+        <li><a href="#">Payment History</a></li>
+      </ul>
+    </aside>
+
+    <main class="dash-content">
+      <h3 style="margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 1rem;">Upcoming Appointments</h3>
+
+      <div id="appointments-list">
+        <p style="color: var(--text-light);">Loading appointments...</p>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+  async function fetchAppointments() {
+    try {
+      // Assuming cookie is automatically sent for authorization
+      const res = await fetch('/api/appointments/myappointments');
+      const data = await res.json();
+
+      const list = document.getElementById('appointments-list');
+
+      if (data.success && data.count > 0) {
+        let html = '';
+        data.data.forEach(app => {
+          html += `
+            <div style="padding: 1.5rem; border: 1px solid #eee; border-radius: 10px; margin-bottom: 1rem; background: var(--bg-light);">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <h4 style="margin-bottom: 0.5rem; color: var(--primary);">${app.service ? app.service.name : 'Unknown Service'}</h4>
+                  <p style="font-size: 0.9rem; color: var(--text-light);">Date: ${new Date(app.date).toDateString()} | Time: ${app.time}</p>
+                </div>
+                <div style="text-align: right;">
+                  <span style="display: inline-block; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; background: var(--secondary); color: var(--accent); font-weight: 600; margin-bottom: 0.5rem; text-transform: uppercase;">
+                    ${app.status}
+                  </span><br>
+                  ${app.paymentStatus === 'successful' ?
+              '<span style="color: #25D366; font-size: 0.85rem; font-weight: 600; display: inline-block; margin-bottom: 0.5rem;">✔️ Paid</span><br>' :
+              `<button onclick="initiatePayment('${app._id}')" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.8rem; margin-bottom: 0.5rem; background-color: #6772E5; border: none;">Pay with Stripe</button><br>`}
+                  ${app.meetLink ? `<a href="${app.meetLink}" target="_blank" class="btn btn-outline" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Join Meet</a>` : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        list.innerHTML = html;
+      } else {
+        list.innerHTML = '<p style="color: var(--text-light);">You have no upcoming appointments.</p>';
+      }
+    } catch (err) {
+      console.log(err);
+      document.getElementById('appointments-list').innerHTML = '<p style="color: red;">Failed to load appointments.</p>';
+    }
+  }
+
+  async function initiatePayment(appointmentId) {
+    try {
+      const res = await fetch('/api/payments/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ appointmentId })
+      });
+      const data = await res.json();
+      if (data.success && data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.message || 'Failed to initialize payment.');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('An expected error occurred while initializing payment.');
+    }
+  }
+
+  fetchAppointments();
+</script>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= title %> | Jeevadhara Wellness Center
+  </title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container nav-content">
+      <a href="/" class="logo">Jeevadhara<span>.</span></a>
+      <ul class="nav-links">
+        <li><a href="/" class="<%= currentPath === '/' ? 'active' : '' %>">Home</a></li>
+        <li><a href="/about" class="<%= currentPath === '/about' ? 'active' : '' %>">About</a></li>
+        <li class="dropdown">
+          <a href="/services" class="<%= currentPath.startsWith('/services') ? 'active' : '' %>">Services ▾</a>
+          <div class="dropdown-content">
+            <a href="/services/online" class="<%= currentPath === '/services/online' ? 'active' : '' %>">Online</a>
+            <a href="/services/offline" class="<%= currentPath === '/services/offline' ? 'active' : '' %>">Offline</a>
+          </div>
+        </li>
+        <li><a href="/contact" class="<%= currentPath === '/contact' ? 'active' : '' %>">Contact</a></li>
+
+        <% if(user) { %>
+          <li><a href="/dashboard"
+              class="btn btn-outline <%= currentPath === '/dashboard' ? 'active' : '' %>">Dashboard</a></li>
+          <li><a href="/api/auth/logout" class="btn btn-primary">Logout</a></li>
+          <% } else { %>
+            <li><a href="/login" class="btn btn-outline <%= currentPath === '/login' ? 'active' : '' %>">Login</a></li>
+            <li><a href="/register" class="btn btn-primary <%= currentPath === '/register' ? 'active' : '' %>">Sign
+                Up</a></li>
+            <% } %>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Content Area where child views will be injected -->
+  <main>
+    <%- body %>
+  </main>
+
+  <!-- Floating WhatsApp Button -->
+  <a href="https://wa.me/91XXXXXXXXXX?text=Hi! I want to book a wellness service" target="_blank" class="whatsapp-btn">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white">
+      <path
+        d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 1.763 6.279L.329 23.633l5.526-1.446A11.956 11.956 0 0 0 11.944 24 12 12 0 0 0 24 12 12 12 0 0 0 11.944 0zm0 22.02A9.973 9.973 0 0 1 6.848 20.6l-.367-.217-4.103 1.074 1.085-3.996-.237-.378A9.975 9.975 0 0 1 1.982 12 9.97 9.97 0 0 1 11.96 2.031a9.98 9.98 0 0 1 9.96 9.969 9.98 9.98 0 0 1-9.976 9.982zm5.474-7.468c-.3-.15-1.776-.877-2.05-.978-.275-.1-.475-.15-.675.15s-.775.978-.95 1.178-.35.225-.65.075-1.267-.467-2.416-1.49c-.894-.796-1.497-1.78-1.672-2.08-.175-.3-.018-.462.132-.612.135-.135.3-.35.45-.525.15-.175.2-.3.3-.5s.05-.375-.025-.525c-.075-.15-.675-1.625-.925-2.225-.24-.585-.487-.506-.675-.515-.175-.008-.375-.01-.575-.01s-.525.075-.8.375-1.05 1.025-1.05 2.5 1.075 2.895 1.225 3.095c.15.2 2.11 3.224 5.11 4.517 2.008.864 2.858 1.002 4.018.847 1.066-.143 3.045-1.246 3.47-2.45s.425-2.235.3-2.45c-.125-.215-.475-.34-.775-.49z" />
+    </svg>
+  </a>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <h2>Jeevadhara<span>.</span></h2>
+        <p>Your peaceful escape in the heart of the city. Elevate your mind, body, and spirit with our holistic wellness
+          programs.</p>
+      </div>
+      <div class="footer-links">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="/about">About Us</a></li>
+          <li><a href="/services">Services</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Jeevadhara Wellness Center. All rights reserved.</p>
+    </div>
+  </footer>
+
+</body>
+
+</html>

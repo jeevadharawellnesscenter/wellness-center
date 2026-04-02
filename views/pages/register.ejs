@@ -1,0 +1,57 @@
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <h2>Create Account</h2>
+    <form id="registerForm">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" class="form-control" required placeholder="John Doe">
+      </div>
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" class="form-control" required placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="text" id="phone" class="form-control" required placeholder="+1 234 567 8900">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" class="form-control" required placeholder="Min. 6 characters">
+      </div>
+      <div id="error-msg" style="color: red; font-size: 0.9rem; margin-top: 10px; display: none;"></div>
+      <button type="submit" class="btn btn-primary">Sign Up</button>
+    </form>
+    <div class="auth-switch">
+      Already have an account? <a href="/login">Log In</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const phone = document.getElementById('phone').value;
+    const password = document.getElementById('password').value;
+
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, phone, password })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        window.location.href = '/dashboard';
+      } else {
+        const err = document.getElementById('error-msg');
+        err.style.display = 'block';
+        err.textContent = data.message || 'Registration failed';
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  });
+</script>
