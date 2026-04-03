@@ -149,6 +149,25 @@ main { min-height: 80vh; }
 }
 @keyframes floatImage { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
+.home-hero-bg {
+  background-image: linear-gradient(rgba(18, 53, 36, 0.65), rgba(18, 53, 36, 0.8)), url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=1920&q=80') !important;
+  background-position: center !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  padding: 12rem 0 !important;
+}
+.home-hero-bg::before {
+  display: none !important;
+}
+.home-hero-bg h1 {
+  color: #ffffff !important;
+  text-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+}
+.home-hero-bg p {
+  color: rgba(255, 255, 255, 0.95) !important;
+  text-shadow: 0 5px 15px rgba(0,0,0,0.3) !important;
+}
+
 /* Section & Cards */
 .section { padding: 8rem 0; position: relative; }
 .section-title { text-align: center; margin-bottom: 5rem; position: relative; z-index: 2; }
