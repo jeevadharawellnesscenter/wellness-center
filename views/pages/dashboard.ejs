@@ -10,7 +10,6 @@
       <ul class="sidebar-nav">
         <li><a href="/dashboard" class="active">My Appointments</a></li>
         <li><a href="/profile">Profile Settings</a></li>
-        <li><a href="#">Payment History</a></li>
       </ul>
     </aside>
 
@@ -47,9 +46,6 @@
                   <span style="display: inline-block; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; background: var(--secondary); color: var(--accent); font-weight: 600; margin-bottom: 0.5rem; text-transform: uppercase;">
                     ${app.status}
                   </span><br>
-                  ${app.paymentStatus === 'successful' ?
-              '<span style="color: #25D366; font-size: 0.85rem; font-weight: 600; display: inline-block; margin-bottom: 0.5rem;">✔️ Paid</span><br>' :
-              `<button onclick="initiatePayment('${app._id}')" class="btn btn-primary" style="padding: 0.4rem 1rem; font-size: 0.8rem; margin-bottom: 0.5rem; background-color: #6772E5; border: none;">Pay with Stripe</button><br>`}
                   ${app.meetLink ? `<a href="${app.meetLink}" target="_blank" class="btn btn-outline" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Join Meet</a>` : ''}
                 </div>
               </div>
@@ -63,27 +59,6 @@
     } catch (err) {
       console.log(err);
       document.getElementById('appointments-list').innerHTML = '<p style="color: red;">Failed to load appointments.</p>';
-    }
-  }
-
-  async function initiatePayment(appointmentId) {
-    try {
-      const res = await fetch('/api/payments/create-checkout-session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ appointmentId })
-      });
-      const data = await res.json();
-      if (data.success && data.url) {
-        window.location.href = data.url;
-      } else {
-        alert(data.message || 'Failed to initialize payment.');
-      }
-    } catch (error) {
-      console.error(error);
-      alert('An expected error occurred while initializing payment.');
     }
   }
 
