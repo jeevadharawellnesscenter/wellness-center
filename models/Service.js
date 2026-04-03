@@ -25,10 +25,6 @@ const serviceSchema = new mongoose.Schema({
     required: [true, 'Please add a description'],
     maxLength: [500, 'Description can not be more than 500 characters']
   },
-  price: {
-    type: Number,
-    required: [true, 'Please add a price']
-  },
   duration: {
     type: Number,
     required: [true, 'Please add duration in minutes']
