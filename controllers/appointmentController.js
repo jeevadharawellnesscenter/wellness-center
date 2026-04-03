@@ -33,9 +33,16 @@ export const bookAppointment = async (req, res) => {
 // @access  Private
 export const getMyAppointments = async (req, res) => {
   try {
+    const { default: Payment } = await import('../models/Payment.js');
     const appointments = await Appointment.find({ user: req.user._id })
       .populate('service', 'name price category duration')
       .lean();
+
+    // Attach payment status
+    for (let app of appointments) {
+      const payment = await Payment.findOne({ appointment: app._id }).sort({ createdAt: -1 });
+      app.paymentStatus = payment ? payment.status : 'unpaid';
+    }
 
     res.json({ success: true, count: appointments.length, data: appointments });
   } catch (error) {
@@ -80,4 +87,3 @@ export const updateAppointmentStatus = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
-
