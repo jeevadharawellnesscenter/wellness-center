@@ -30,7 +30,6 @@
     <button onclick="closeModal()"
       style="position: absolute; top: 1rem; right: 1.5rem; background: transparent; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-light);">&times;</button>
     <h3 style="margin-bottom: 0.5rem;" id="modalServiceName">Service Name</h3>
-    <p style="color: var(--primary); font-weight: 600; margin-bottom: 0.5rem;" id="modalServicePrice">$0</p>
     <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 1.5rem;" id="modalServiceLocation">📍
       Location: Jeevadhara Clinic Headquarters</p>
 
@@ -94,8 +93,7 @@
                 <h3 style="margin-top: 0.5rem;">${srv.name}</h3>
                 <p style="font-size: 0.95rem;">${srv.description}</p>
                 <div class="service-footer" style="padding-top: 1.5rem;">
-                  <span class="price" style="font-size: 1.4rem;">$${srv.price}</span>
-                  <button class="btn btn-primary" style="padding: 0.6rem 1.5rem; font-size: 0.9rem;" onclick="openBookingModal('${srv._id}', '${srv.name.replace(/'/g, "\\'")}', ${srv.price}, '${srv.location}')">Book Appointment</button>
+                  <button class="btn btn-primary" style="padding: 0.6rem 1.5rem; font-size: 0.9rem;" onclick="openBookingModal('${srv._id}', '${srv.name.replace(/'/g, "\\'")}', '${srv.location}')">Book Appointment</button>
                 </div>
               </div>
             </div>
@@ -111,10 +109,9 @@
     }
   }
 
-  function openBookingModal(id, name, price, location) {
+  function openBookingModal(id, name, location) {
     document.getElementById('bookingServiceId').value = id;
     document.getElementById('modalServiceName').textContent = name;
-    document.getElementById('modalServicePrice').textContent = '$' + price;
     if (location && location !== 'undefined') {
       document.getElementById('modalServiceLocation').textContent = '📍 Location: ' + location;
     }
