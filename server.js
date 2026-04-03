@@ -66,14 +66,12 @@ import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js'; // Will be simple or reuse auth routes
 import serviceRoutes from './routes/serviceRoutes.js';
 import appointmentRoutes from './routes/appointmentRoutes.js';
-import paymentRoutes from './routes/paymentRoutes.js';
 
 // Mount Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/appointments', appointmentRoutes);
-app.use('/api/payments', paymentRoutes);
 
 // View Routes Setup
 app.get('/', (req, res) => res.render('pages/index', { title: 'Home' }));
