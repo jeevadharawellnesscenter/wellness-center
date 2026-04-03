@@ -23,7 +23,8 @@
     <button onclick="closeModal()"
       style="position: absolute; top: 1rem; right: 1.5rem; background: transparent; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-light);">&times;</button>
     <h3 style="margin-bottom: 0.5rem;" id="modalServiceName">Service Name</h3>
-    <p style="color: var(--primary); font-weight: 600; margin-bottom: 0.5rem;" id="modalServicePrice">$0</p>
+    <!-- Price removed per user request -->
+    <p style="display: none;" id="modalServicePrice">$0</p>
     <div
       style="background: #e3f2fd; color: #1976d2; padding: 0.8rem; border-radius: 10px; font-size: 0.85rem; margin-bottom: 1.5rem;">
       <span style="font-weight: 600;">Note:</span> A secure Google Meet link will be generated automatically upon
@@ -102,7 +103,7 @@
                 <h3>${srv.name}</h3>
                 <p style="font-size: 0.95rem;">${srv.description}</p>
                 <div class="service-footer">
-                  <span class="price" style="color: #1e3c72;">$${srv.price}</span>
+                  <!-- Price removed -->
                   <button class="btn btn-primary" style="padding: 0.5rem 1.2rem; font-size: 0.9rem; background: #1e3c72; border: none;" onclick="openBookingModal('${srv._id}', '${srv.name.replace(/'/g, "\\'")}', ${srv.price})">Book Virtual Slot</button>
                 </div>
               </div>
