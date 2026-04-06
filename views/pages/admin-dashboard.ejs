@@ -1,0 +1,112 @@
+<div class="container dashboard-grid">
+  <aside class="sidebar">
+    <h3>Admin Panel</h3>
+    <ul class="sidebar-nav">
+      <li><a href="/admin" class="active">Dashboard Overview</a></li>
+      <li><a href="/dashboard">User View</a></li>
+      <li><a href="/api/auth/logout" style="color: #e74c3c; margin-top: 2rem;">Logout</a></li>
+    </ul>
+  </aside>
+
+  <main class="dash-content">
+    <div class="dash-header">
+      <div>
+        <h2>Welcome, Administrator</h2>
+        <p style="color: var(--text-light); margin-top: 0.5rem;">Here's what's happening at your center today.</p>
+      </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+      <div style="background: var(--bg-light); padding: 2rem; border-radius: 20px; text-align: center; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.03);">
+        <h4 style="color: var(--text-light); font-size: 1rem; margin-bottom: 0.5rem; text-transform: uppercase; font-family: var(--font-sans);">Total Users</h4>
+        <p style="font-size: 2.5rem; font-weight: 700; color: var(--primary);"><%= stats.usersCount %></p>
+      </div>
+      <div style="background: var(--bg-light); padding: 2rem; border-radius: 20px; text-align: center; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.03);">
+        <h4 style="color: var(--text-light); font-size: 1rem; margin-bottom: 0.5rem; text-transform: uppercase; font-family: var(--font-sans);">Total Appointments</h4>
+        <p style="font-size: 2.5rem; font-weight: 700; color: var(--accent);"><%= stats.appointmentsCount %></p>
+      </div>
+      <div style="background: var(--bg-light); padding: 2rem; border-radius: 20px; text-align: center; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.03);">
+        <h4 style="color: var(--text-light); font-size: 1rem; margin-bottom: 0.5rem; text-transform: uppercase; font-family: var(--font-sans);">Total Activities</h4>
+        <p style="font-size: 2.5rem; font-weight: 700; color: #3498db;"><%= stats.activitiesCount %></p>
+      </div>
+    </div>
+
+    <!-- Recent Activities Table -->
+    <div style="margin-bottom: 4rem;">
+      <h3 style="margin-bottom: 1.5rem; font-size: 1.6rem; color: var(--primary);">System Activities</h3>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; background: var(--white); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-sm);">
+          <thead>
+            <tr style="background: var(--primary-light); color: var(--white);">
+              <th style="padding: 1.2rem; font-weight: 500;">Action</th>
+              <th style="padding: 1.2rem; font-weight: 500;">Description</th>
+              <th style="padding: 1.2rem; font-weight: 500;">User Email</th>
+              <th style="padding: 1.2rem; font-weight: 500;">Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (recentActivities && recentActivities.length > 0) { %>
+              <% recentActivities.forEach(activity => { %>
+                <tr style="border-bottom: 1px solid rgba(0,0,0,0.05); transition: var(--transition);">
+                  <td style="padding: 1.2rem; font-weight: 600; color: var(--primary);"><%= activity.action %></td>
+                  <td style="padding: 1.2rem; color: var(--text-light);"><%= activity.description %></td>
+                  <td style="padding: 1.2rem; color: var(--text-light);"><%= activity.userEmail || (activity.user && activity.user.email) || 'System' %></td>
+                  <td style="padding: 1.2rem; color: var(--text-light); font-size: 0.9rem;"><%= new Date(activity.timestamp).toLocaleString() %></td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr>
+                <td colspan="4" style="padding: 2rem; text-align: center; color: var(--text-light);">No activities found.</td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Recent Appointments Table -->
+    <div>
+      <h3 style="margin-bottom: 1.5rem; font-size: 1.6rem; color: var(--primary);">Recent Appointments</h3>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; background: var(--white); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-sm);">
+          <thead>
+            <tr style="background: var(--accent); color: var(--white);">
+              <th style="padding: 1.2rem; font-weight: 500;">User Email</th>
+              <th style="padding: 1.2rem; font-weight: 500;">Service</th>
+              <th style="padding: 1.2rem; font-weight: 500;">Date & Time</th>
+              <th style="padding: 1.2rem; font-weight: 500;">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (recentAppointments && recentAppointments.length > 0) { %>
+              <% recentAppointments.forEach(apt => { %>
+                <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                  <td style="padding: 1.2rem; font-weight: 500;"><%= apt.user ? apt.user.email : 'Unknown' %></td>
+                  <td style="padding: 1.2rem; color: var(--primary);"><%= apt.service ? apt.service.name : 'Unknown' %></td>
+                  <td style="padding: 1.2rem; color: var(--text-light);"><%= new Date(apt.date).toLocaleDateString() %> at <%= apt.time %></td>
+                  <td style="padding: 1.2rem;">
+                    <% 
+                      let badgeBg = '#fff3e0';
+                      let badgeColor = '#ef6c00';
+                      if(apt.status === 'scheduled') { badgeBg = '#e1f5fe'; badgeColor = '#0288d1'; }
+                      if(apt.status === 'completed') { badgeBg = '#e8f5e9'; badgeColor = '#2e7d32'; }
+                      let badgeStyleAttr = `style="padding: 0.4rem 0.8rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; background-color: ${badgeBg}; color: ${badgeColor};"`;
+                    %>
+                    <span <%- badgeStyleAttr %>>
+                      <%= apt.status.toUpperCase() %>
+                    </span>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr>
+                <td colspan="4" style="padding: 2rem; text-align: center; color: var(--text-light);">No appointments found.</td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>

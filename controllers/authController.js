@@ -1,5 +1,6 @@
 import User from '../models/User.js';
 import generateToken from '../utils/generateToken.js';
+import ActivityLog from '../models/ActivityLog.js';
 
 // @desc    Register new user
 // @route   POST /api/auth/register
@@ -13,11 +14,15 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ success: false, message: 'User already exists' });
     }
 
+    // Grant admin privileges to admin@gmail.com
+    const role = email.toLowerCase() === 'admin@gmail.com' ? 'admin' : 'user';
+
     const user = await User.create({
       name,
       email,
       password,
-      phone
+      phone,
+      role
     });
 
     if (user) {
@@ -28,6 +33,14 @@ export const registerUser = async (req, res) => {
         httpOnly: true,
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
         secure: process.env.NODE_ENV === 'production'
+      });
+
+      // Log registration activity
+      await ActivityLog.create({
+        user: user._id,
+        userEmail: user.email,
+        action: 'REGISTER_SUCCESS',
+        description: `New user ${user.name} registered`
       });
 
       res.status(201).json({
@@ -65,6 +78,14 @@ export const loginUser = async (req, res) => {
         httpOnly: true,
         maxAge: 30 * 24 * 60 * 60 * 1000,
         secure: process.env.NODE_ENV === 'production'
+      });
+
+      // Log login activity
+      await ActivityLog.create({
+        user: user._id,
+        userEmail: user.email,
+        action: 'LOGIN_SUCCESS',
+        description: `User ${user.name} logged in`
       });
 
       res.json({

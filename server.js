@@ -50,8 +50,11 @@ app.use(async (req, res, next) => {
     try {
       const jwt = await import('jsonwebtoken');
       const decoded = jwt.default.verify(token, process.env.JWT_SECRET);
-      // We will lazily load user or pass decoding to views. For now just passing id.
-      res.locals.user = { _id: decoded.id };
+      
+      // Fetch user from DB to inject role and full details
+      const User = (await import('./models/User.js')).default;
+      const currentUser = await User.findById(decoded.id).select('-password');
+      res.locals.user = currentUser;
     } catch (err) { }
   } else {
     res.locals.user = null;
@@ -61,17 +64,17 @@ app.use(async (req, res, next) => {
   next();
 });
 
-// Import Routes (To be created)
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js'; // Will be simple or reuse auth routes
 import serviceRoutes from './routes/serviceRoutes.js';
 import appointmentRoutes from './routes/appointmentRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 
-// Mount Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/appointments', appointmentRoutes);
+app.use('/admin', adminRoutes);
 
 // View Routes Setup
 app.get('/', (req, res) => res.render('pages/index', { title: 'Home' }));
