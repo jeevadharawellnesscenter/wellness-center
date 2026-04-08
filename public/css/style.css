@@ -107,6 +107,13 @@ ul { list-style: none; }
 .nav-links a:not(.btn)::after { content: ''; position: absolute; width: 0; height: 1px; bottom: -4px; left: 0; background-color: var(--accent); transition: width 0.3s ease; }
 .nav-links a:not(.btn):hover::after { width: 100%; }
 .nav-links .btn { padding: 0.8rem 2rem; font-size: 0.9rem; }
+.nav-admin-btn {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.nav-signup-btn {
+  color: #fff !important;
+}
 
 /* Dropdown */
 .dropdown { position: relative; padding-bottom: 5px; }
@@ -226,6 +233,77 @@ main { min-height: 80vh; }
 .dash-content { background: var(--white); border-radius: 30px; padding: 4.5rem; box-shadow: var(--shadow-lg); border: 1px solid rgba(0,0,0,0.02); }
 .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); }
 
+/* Generic Page UI */
+.page-breadcrumb {
+  background: var(--bg-light);
+  padding: 0.95rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.page-breadcrumb .container {
+  font-size: 0.92rem;
+  color: var(--text-light);
+}
+.page-breadcrumb a:hover {
+  color: var(--accent);
+}
+.page-hero {
+  min-height: 35vh;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.page-hero h1 {
+  color: #fff;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+}
+.page-hero p {
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: 1rem;
+}
+.category-card {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+.category-icon {
+  font-size: 3.5rem;
+  margin-bottom: 1.2rem;
+}
+
+/* Dashboard appointment cards */
+.appointment-card {
+  padding: 1.25rem;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 14px;
+  margin-bottom: 1rem;
+  background: var(--bg-light);
+}
+.appointment-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.appointment-status {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  background: var(--secondary);
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+.form-error {
+  color: #c53030;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  display: none;
+}
+
 /* Footer */
 .footer { background: var(--primary); color: var(--white); padding: 7rem 0 3rem; position: relative; overflow: hidden; }
 .footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent); }
@@ -271,4 +349,8 @@ main { min-height: 80vh; }
   .section { padding: 4rem 0; }
   .auth-card { padding: 2.5rem 1.5rem; border-radius: 24px; }
   .dash-content { padding: 2.5rem 1.5rem; border-radius: 20px; }
+  .appointment-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

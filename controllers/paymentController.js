@@ -2,13 +2,27 @@ import Stripe from 'stripe';
 import Payment from '../models/Payment.js';
 import Appointment from '../models/Appointment.js';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY); // Uses env key
+const getStripeClient = () => {
+  const secretKey = process.env.STRIPE_SECRET_KEY;
+  if (!secretKey) {
+    return null;
+  }
+  return new Stripe(secretKey);
+};
 
 // @desc    Create Stripe Checkout Session
 // @route   POST /api/payments/create-checkout-session
 // @access  Private
 export const createCheckoutSession = async (req, res) => {
   try {
+    const stripe = getStripeClient();
+    if (!stripe) {
+      return res.status(503).json({
+        success: false,
+        message: 'Payment gateway is not configured. Please contact support.'
+      });
+    }
+
     const { appointmentId } = req.body;
 
     const appointment = await Appointment.findById(appointmentId).populate('service');

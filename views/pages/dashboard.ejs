@@ -36,14 +36,14 @@
         let html = '';
         data.data.forEach(app => {
           html += `
-            <div style="padding: 1.5rem; border: 1px solid #eee; border-radius: 10px; margin-bottom: 1rem; background: var(--bg-light);">
-              <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="appointment-card">
+              <div class="appointment-row">
                 <div>
                   <h4 style="margin-bottom: 0.5rem; color: var(--primary);">${app.service ? app.service.name : 'Unknown Service'}</h4>
                   <p style="font-size: 0.9rem; color: var(--text-light);">Date: ${new Date(app.date).toDateString()} | Time: ${app.time}</p>
                 </div>
                 <div style="text-align: right;">
-                  <span style="display: inline-block; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; background: var(--secondary); color: var(--accent); font-weight: 600; margin-bottom: 0.5rem; text-transform: uppercase;">
+                  <span class="appointment-status">
                     ${app.status}
                   </span><br>
                   ${app.meetLink ? `<a href="${app.meetLink}" target="_blank" class="btn btn-outline" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Join Meet</a>` : ''}

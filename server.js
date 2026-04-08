@@ -87,6 +87,18 @@ app.get('/login', (req, res) => res.render('pages/login', { title: 'Login' }));
 app.get('/register', (req, res) => res.render('pages/register', { title: 'Register' }));
 app.get('/dashboard', protect, (req, res) => res.render('pages/dashboard', { title: 'User Dashboard', user: req.user }));
 app.get('/profile', protect, (req, res) => res.render('pages/profile', { title: 'Profile Settings', user: req.user }));
+app.get('/health', (req, res) => res.status(200).json({ success: true, status: 'ok' }));
+
+// 404 handler for unknown API endpoints
+app.use('/api', (req, res) => {
+  res.status(404).json({ success: false, message: 'API route not found' });
+});
+
+// Last-resort error handler
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ success: false, message: 'Internal server error' });
+});
 
 const PORT = process.env.PORT || 5000;
 
