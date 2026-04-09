@@ -108,6 +108,7 @@ ul { list-style: none; }
 .nav-links a:not(.btn)::after { content: ''; position: absolute; width: 0; height: 1px; bottom: -4px; left: 0; background-color: var(--accent); transition: width 0.3s ease; }
 .nav-links a:not(.btn):hover::after { width: 100%; }
 .nav-links .btn { padding: 0.8rem 2rem; font-size: 0.9rem; }
+.nav-links .btn-primary { color: #ffffff !important; }
 .nav-admin-btn {
   border-color: var(--accent);
   color: var(--accent);
