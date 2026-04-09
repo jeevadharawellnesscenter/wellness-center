@@ -86,7 +86,7 @@
       if (data.success) {
         appendMessage(data.advice);
       } else {
-        appendMessage("I apologize, I'm having trouble connecting to the wellness grid right now. Please try again in a moment.");
+        appendMessage("Advisor Note: " + (data.message || "I'm having trouble connecting right now. Please try again later."));
       }
     } catch (err) {
       console.error(err);
