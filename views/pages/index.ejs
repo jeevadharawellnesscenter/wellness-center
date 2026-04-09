@@ -1,5 +1,8 @@
 <style>
   /* ULTRA PREMIUM HOME PAGE STYLES */
+  .section-heading {
+    font-size: clamp(2rem, 5vw, 3rem);
+  }
   .hero-premium {
     position: relative;
     height: 90vh; 
@@ -7,6 +10,7 @@
     display: flex;
     align-items: center;
     background: url('https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&q=80&w=2000') center/cover fixed; 
+    padding-top: 80px; /* Space for sticky navbar */
   }
   .hero-premium::after {
     content: '';
@@ -213,7 +217,21 @@
     .about-grid { grid-template-columns: 1fr; gap: 3rem; }
     .about-img-wrapper img { height: 400px; }
     .floating-badge { display: none; }
-    .hero-title { font-size: 3.5rem; }
+    .hero-premium { 
+      height: auto; 
+      min-height: 100vh; 
+      padding: 120px 0 60px;
+      background-attachment: scroll; /* Better for mobile performance */
+    }
+    .hero-title { font-size: clamp(2.5rem, 10vw, 3.5rem); }
+    .hero-badge { margin-bottom: 1.5rem; }
+    .hero-subtitle { font-size: 1.1rem; margin-bottom: 2rem; }
+  }
+
+  @media (max-width: 600px) {
+    .hero-title { font-size: 2.5rem; }
+    .trust-bar { padding: 1.5rem; margin-top: -2rem; }
+    .section-title h2, .about-text h2, .featured-services h2 { font-size: 2.2rem !important; }
   }
 </style>
 
@@ -270,7 +288,7 @@
     </div>
     <div class="about-text">
       <span style="color: var(--accent); font-weight: 600; letter-spacing: 2px; text-transform: uppercase; font-size: 0.9rem;">The Flow of Life</span>
-      <h2 style="font-size: 3rem; font-family: var(--font-serif); margin: 1rem 0 2rem; color: var(--primary-dark); line-height: 1.2;">Sanctuary for the Soul,<br>Healing for the Body</h2>
+      <h2 style="font-family: var(--font-serif); margin: 1rem 0 2rem; color: var(--primary-dark); line-height: 1.2;" class="section-heading">Sanctuary for the Soul,<br>Healing for the Body</h2>
       <p style="font-size: 1.1rem; color: var(--text-light); margin-bottom: 1.5rem; line-height: 1.8;">
         At Jeevadhara, we believe true wellness comes from aligning yourself with nature. We provide deeply immersive, completely drug-free therapies drawn from the world's oldest healing traditions.
       </p>
@@ -288,7 +306,7 @@
     <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4rem; flex-wrap: wrap; gap: 2rem;">
       <div style="max-width: 600px;">
         <span style="color: var(--primary); font-weight: 600; letter-spacing: 2px; text-transform: uppercase; font-size: 0.9rem;">Curated Experiences</span>
-        <h2 style="font-size: 3rem; font-family: var(--font-serif); color: var(--primary-dark); margin-top: 1rem;">Oasis of Therapies</h2>
+        <h2 style="font-family: var(--font-serif); color: var(--primary-dark); margin-top: 1rem;" class="section-heading">Oasis of Therapies</h2>
       </div>
       <a href="/services" class="btn btn-primary" style="background: white; color: var(--primary); border-radius: 30px; box-shadow: 0 10px 20px rgba(0,0,0,0.05);">View All Services</a>
     </div>
