@@ -70,12 +70,22 @@ import serviceRoutes from './routes/serviceRoutes.js';
 import appointmentRoutes from './routes/appointmentRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import contactRoutes from './routes/contactRoutes.js';
+import blogRoutes from './routes/blogRoutes.js';
+import practitionerRoutes from './routes/practitionerRoutes.js';
+import newsletterRoutes from './routes/newsletterRoutes.js';
+import diaryRoutes from './routes/diaryRoutes.js';
+import aiRoutes from './routes/aiRoutes.js';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/blogs', blogRoutes);
+app.use('/api/practitioners', practitionerRoutes);
+app.use('/api/newsletter', newsletterRoutes);
+app.use('/api/diary', diaryRoutes);
+app.use('/api/ai', aiRoutes);
 app.use('/admin', adminRoutes);
 
 // View Routes Setup
@@ -91,6 +101,11 @@ app.get('/forgot-password', (req, res) => res.render('pages/forgot-password', { 
 app.get('/reset-password/:token', (req, res) => res.render('pages/reset-password', { title: 'Reset Password', token: req.params.token }));
 app.get('/dashboard', protect, (req, res) => res.render('pages/dashboard', { title: 'User Dashboard', user: req.user }));
 app.get('/profile', protect, (req, res) => res.render('pages/profile', { title: 'Profile Settings', user: req.user }));
+app.get('/blogs', (req, res) => res.render('pages/blogs', { title: 'Wellness Insights' }));
+app.get('/blogs/:id', (req, res) => res.render('pages/blog-detail', { title: 'Blog Details' }));
+app.get('/workshops', (req, res) => res.render('pages/workshops', { title: 'Wellness Workshops' }));
+app.get('/diary', protect, (req, res) => res.render('pages/diary', { title: 'My Wellness Diary', user: req.user }));
+app.get('/advisor', (req, res) => res.render('pages/advisor', { title: 'AI Wellness Advisor' }));
 app.get('/health', (req, res) => res.status(200).json({ success: true, status: 'ok' }));
 
 // 404 handler for unknown API endpoints

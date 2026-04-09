@@ -1,0 +1,52 @@
+<div class="page-breadcrumb">
+  <div class="container">
+    <a href="/blogs">Wellness Insights</a> &gt; <span id="breadcrumb-title" style="color: var(--primary); font-weight: 500;">Loading...</span>
+  </div>
+</div>
+
+<article id="blog-container" class="container" style="max-width: 900px; padding: 5rem 0; opacity: 0; transition: opacity 0.5s ease;">
+  <div id="blog-header" style="text-align: center; margin-bottom: 4rem;">
+    <span id="blog-cat" style="color: var(--accent); font-weight: 600; letter-spacing: 3px; text-transform: uppercase; font-size: 0.9rem;">Category</span>
+    <h1 id="blog-title" style="font-size: clamp(2.5rem, 6vw, 4rem); margin: 1.5rem 0; line-height: 1.1;">Article Title</h1>
+    <div style="display: flex; justify-content: center; gap: 2rem; color: var(--text-light); font-size: 1rem;">
+      <span id="blog-author">By Jeevadhara Team</span>
+      <span id="blog-date">Date</span>
+    </div>
+  </div>
+
+  <div id="blog-img" style="width: 100%; height: 500px; border-radius: 30px; margin-bottom: 4rem; box-shadow: var(--shadow-lg); background-size: cover; background-position: center;"></div>
+
+  <div id="blog-content" style="font-size: 1.2rem; line-height: 1.9; color: var(--text-dark); background: white; padding: 4rem; border-radius: 30px; box-shadow: var(--shadow-sm);">
+    <!-- Content injected here -->
+  </div>
+
+  <div style="text-align: center; margin-top: 5rem;">
+    <a href="/blogs" class="btn btn-outline">Back to Insights</a>
+  </div>
+</article>
+
+<script>
+  async function fetchBlogDetail() {
+    const id = window.location.pathname.split('/').pop();
+    try {
+      const res = await fetch(`/api/blogs/${id}`);
+      const { data } = await res.json();
+      
+      if (data) {
+        document.getElementById('breadcrumb-title').textContent = data.title;
+        document.getElementById('blog-title').textContent = data.title;
+        document.getElementById('blog-cat').textContent = data.category;
+        document.getElementById('blog-author').textContent = 'By ' + data.author;
+        document.getElementById('blog-date').textContent = new Date(data.publishDate).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('blog-img').style.backgroundImage = `url('${data.image}')`;
+        document.getElementById('blog-content').innerHTML = data.content;
+        
+        const container = document.getElementById('blog-container');
+        container.style.opacity = '1';
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  fetchBlogDetail();
+</script>

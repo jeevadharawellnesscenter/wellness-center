@@ -1,0 +1,52 @@
+<div class="page-breadcrumb">
+  <div class="container">
+    <a href="/">Home</a> &gt; <span style="color: var(--primary); font-weight: 500;">Wellness Insights</span>
+  </div>
+</div>
+
+<section class="page-hero" style="background: linear-gradient(135deg, #123524 0%, #2a5a43 100%); min-height: 30vh; display: flex; align-items: center; justify-content: center; text-align: center; color: white;">
+  <div class="container">
+    <h1 style="color: white; font-size: clamp(2.5rem, 8vw, 4rem); margin-bottom: 1rem;">Wellness Insights</h1>
+    <p style="color: rgba(255,255,255,0.9); font-size: 1.2rem; max-width: 700px; margin: 0 auto;">Premium wisdom from the world of naturopathy, diet, and holistic healing.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div id="blogs-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 3rem;">
+      <p style="text-align: center; width: 100%; color: var(--text-light);">Gathering our latest insights...</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  async function fetchBlogs() {
+    try {
+      const res = await fetch('/api/blogs');
+      const { data } = await res.json();
+      const grid = document.getElementById('blogs-grid');
+      
+      if (data && data.length > 0) {
+        grid.innerHTML = data.map(blog => `
+          <div class="service-card" style="cursor: pointer;" onclick="window.location.href='/blogs/${blog._id}'">
+            <div class="service-img" style="background-image: url('${blog.image}'); height: 240px;"></div>
+            <div class="service-content" style="padding: 2rem;">
+              <span class="service-cat" style="color: var(--accent); letter-spacing: 2px;">${blog.category}</span>
+              <h3 style="margin: 1rem 0; font-size: 1.6rem; color: var(--primary);">${blog.title}</h3>
+              <p style="font-size: 0.95rem; color: var(--text-light); line-height: 1.7; margin-bottom: 2rem;">${blog.excerpt}</p>
+              <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee; padding-top: 1.2rem;">
+                <span style="font-size: 0.85rem; color: var(--text-light);">${new Date(blog.publishDate).toLocaleDateString()}</span>
+                <span style="font-weight: 600; color: var(--primary); font-size: 0.9rem;">Read More →</span>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      } else {
+        grid.innerHTML = '<p style="text-align: center; width: 100%;">No articles published yet. Check back soon!</p>';
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  fetchBlogs();
+</script>

@@ -1,0 +1,117 @@
+<div class="container dashboard-grid">
+  <aside class="sidebar">
+    <h3>Admin Panel</h3>
+    <ul class="sidebar-nav">
+      <li><a href="/admin">Dashboard Overview</a></li>
+      <li><a href="/admin/services">Manage Services</a></li>
+      <li><a href="/admin/blogs" class="active">Manage Blogs</a></li>
+      <li><a href="/admin/practitioners">Manage Practitioners</a></li>
+      <li><a href="/admin/subscribers">Newsletter Subscribers</a></li>
+      <li><a href="/dashboard">User View</a></li>
+    </ul>
+  </aside>
+
+  <main class="dash-content">
+    <div class="dash-header">
+      <h2>Wellness Insights (Blogs)</h2>
+      <button class="btn btn-primary" onclick="showAddModal()">+ Create New Article</button>
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <% blogs.forEach(blog => { %>
+        <div style="background: white; padding: 1.5rem; border-radius: 15px; margin-bottom: 1rem; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex; gap: 1.5rem; align-items: center;">
+            <div style="width: 80px; height: 80px; border-radius: 10px; background: url('<%= blog.image %>') center/cover;"></div>
+            <div>
+              <h4 style="margin-bottom: 0.2rem;"><%= blog.title %></h4>
+              <span style="font-size: 0.8rem; color: var(--accent); text-transform: uppercase;"><%= blog.category %></span>
+              <p style="font-size: 0.9rem; color: var(--text-light); margin-top: 0.3rem;"><%= blog.publishDate.toLocaleDateString() %></p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 1rem;">
+            <button onclick="deleteBlog('<%= blog._id %>')" style="color: #e74c3c; background: none; border: none; cursor: pointer;">Delete</button>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </main>
+</div>
+
+<!-- Add Blog Modal -->
+<div id="blogModal" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+  <div style="background:white; padding:2.5rem; border-radius:20px; width:95%; max-width:800px; height: 90vh; overflow-y: auto;">
+    <h3>Create New Wellness Article</h3>
+    <form id="blogForm" onsubmit="handleBlogSubmit(event)" style="margin-top: 1.5rem;">
+      <div class="form-group">
+        <label>Article Title</label>
+        <input type="text" name="title" class="form-control" required placeholder="e.g. The Healing Power of Mud">
+      </div>
+      <div class="form-group">
+        <label>Category</label>
+        <select name="category" class="form-control" required>
+          <option value="Naturopathy">Naturopathy</option>
+          <option value="Diet">Diet</option>
+          <option value="Lifestyle">Lifestyle</option>
+          <option value="Mindfulness">Mindfulness</option>
+          <option value="Yoga">Yoga</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Short Excerpt</label>
+        <input type="text" name="excerpt" class="form-control" required placeholder="A brief summary for the card...">
+      </div>
+      <div class="form-group">
+        <label>Full Content (HTML allowed)</label>
+        <textarea name="content" class="form-control" required rows="10" placeholder="Write your premium health content here..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Image URL</label>
+        <input type="text" name="image" class="form-control" placeholder="Unsplash URL">
+      </div>
+      <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+        <button type="button" class="btn btn-outline" style="flex: 1;" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary" style="flex: 1;">Publish Insights</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function showAddModal() {
+    document.getElementById('blogModal').style.display = 'flex';
+  }
+  function closeModal() {
+    document.getElementById('blogModal').style.display = 'none';
+  }
+  async function handleBlogSubmit(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+    
+    try {
+      const res = await fetch('/api/blogs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if(res.ok) {
+        alert('Article published successfully');
+        window.location.reload();
+      } else {
+        alert('Failed to publish article');
+      }
+    } catch(err) {
+      console.error(err);
+      alert('Error saving blog');
+    }
+  }
+  async function deleteBlog(id) {
+    if(!confirm('Delete this article?')) return;
+    try {
+      const res = await fetch(`/api/blogs/${id}`, { method: 'DELETE' });
+      if(res.ok) window.location.reload();
+    } catch(err) {
+      console.error(err);
+    }
+  }
+</script>

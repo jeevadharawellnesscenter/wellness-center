@@ -22,14 +22,18 @@ export const createGoogleMeet = async (appointmentData) => {
       }
     }
 
-    const auth = new google.auth.JWT(
-      credentials.client_email,
-      null,
-      credentials.private_key,
-      ['https://www.googleapis.com/auth/calendar']
-    );
+    // Fix private key formatting (essential for JSON parsing from certain environments)
+    if (credentials.private_key && typeof credentials.private_key === 'string') {
+      credentials.private_key = credentials.private_key
+        .replace(/\\n/g, '\n') // Replace literal \n with newlines
+        .trim();               // Remove any trailing spaces or newlines
+    }
 
-    const calendar = google.calendar({ version: 'v3', auth });
+    const auth = google.auth.fromJSON(credentials);
+    auth.scopes = ['https://www.googleapis.com/auth/calendar'];
+
+    const authClient = await auth.getClient();
+    const calendar = google.calendar({ version: 'v3', auth: authClient });
 
     // Clinic's Calendar ID (Usually the main Gmail address)
     // Fallback to 'primary' (which is the service account's calendar) if not provided

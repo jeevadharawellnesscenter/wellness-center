@@ -1,0 +1,57 @@
+<div class="page-breadcrumb">
+  <div class="container">
+    <a href="/">Home</a> &gt; <span style="color: var(--primary); font-weight: 500;">Workshops</span>
+  </div>
+</div>
+
+<section class="page-hero" style="background: linear-gradient(135deg, #123524 0%, #CF9D40 100%); min-height: 35vh; display: flex; align-items: center; justify-content: center; text-align: center; color: white;">
+  <div class="container">
+    <h1 style="color: white; font-size: clamp(2.5rem, 8vw, 4rem); margin-bottom: 1rem;">Virtual Workshops</h1>
+    <p style="color: rgba(255,255,255,0.9); font-size: 1.2rem; max-width: 700px; margin: 0 auto;">Exclusive group sessions for our member community. Deep dive into specialized healing techniques.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div id="workshops-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 3rem;">
+        <!-- Mock workshops since we just started -->
+        <div class="service-card" style="padding: 0; border: none; background: white; border-radius: 30px; overflow: hidden; box-shadow: var(--shadow-lg);">
+            <div style="height: 250px; background: url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=800') center/cover; position: relative;">
+                <span style="position: absolute; top: 1.5rem; right: 1.5rem; background: var(--accent); color: white; padding: 0.5rem 1rem; border-radius: 50px; font-weight: 700; font-size: 0.8rem;">MEMBER ONLY</span>
+            </div>
+            <div style="padding: 2.5rem;">
+                <span style="color: var(--accent); font-weight: 600; letter-spacing: 2px; text-transform: uppercase; font-size: 0.8rem;">Apr 25 | 10:00 AM</span>
+                <h3 style="margin: 1rem 0; font-size: 1.8rem;">Digital Detox & Eye Care</h3>
+                <p style="color: var(--text-light); line-height: 1.7; margin-bottom: 2rem;">A specialized virtual workshop on reducing eye strain and natural techniques for digital detoxification.</p>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee; padding-top: 1.5rem;">
+                    <span style="font-weight: 700; font-size: 1.3rem; color: var(--primary);">$49.00</span>
+                    <% if(user) { %>
+                        <button class="btn btn-primary" style="padding: 0.6rem 1.5rem; font-size: 0.9rem;">Register Now</button>
+                    <% } else { %>
+                        <a href="/login" class="btn btn-outline" style="padding: 0.6rem 1.5rem; font-size: 0.9rem;">Login to Register</a>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <div class="service-card" style="padding: 0; border: none; background: white; border-radius: 30px; overflow: hidden; box-shadow: var(--shadow-lg);">
+            <div style="height: 250px; background: url('https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?q=80&w=800') center/cover; position: relative;">
+                <span style="position: absolute; top: 1.5rem; right: 1.5rem; background: var(--accent); color: white; padding: 0.5rem 1rem; border-radius: 50px; font-weight: 700; font-size: 0.8rem;">MEMBER ONLY</span>
+            </div>
+            <div style="padding: 2.5rem;">
+                <span style="color: var(--accent); font-weight: 600; letter-spacing: 2px; text-transform: uppercase; font-size: 0.8rem;">May 12 | 04:00 PM</span>
+                <h3 style="margin: 1rem 0; font-size: 1.8rem;">The Zen Kitchen Mastery</h3>
+                <p style="color: var(--text-light); line-height: 1.7; margin-bottom: 2rem;">Learn the art of Sattvic cooking and how to align your kitchen with naturopathy principles.</p>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee; padding-top: 1.5rem;">
+                    <span style="font-weight: 700; font-size: 1.3rem; color: var(--primary);">$75.00</span>
+                    <% if(user) { %>
+                        <button class="btn btn-primary" style="padding: 0.6rem 1.5rem; font-size: 0.9rem;">Register Now</button>
+                    <% } else { %>
+                        <a href="/login" class="btn btn-outline" style="padding: 0.6rem 1.5rem; font-size: 0.9rem;">Login to Register</a>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</section>

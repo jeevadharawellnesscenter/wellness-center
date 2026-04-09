@@ -2,7 +2,11 @@
   <aside class="sidebar">
     <h3>Admin Panel</h3>
     <ul class="sidebar-nav">
-      <li><a href="/admin" class="active">Dashboard Overview</a></li>
+      <li><a href="/admin" class="<%= currentPath === '/admin' ? 'active' : '' %>">Dashboard Overview</a></li>
+      <li><a href="/admin/services">Manage Services</a></li>
+      <li><a href="/admin/blogs">Manage Blogs</a></li>
+      <li><a href="/admin/practitioners">Manage Practitioners</a></li>
+      <li><a href="/admin/subscribers">Newsletter Subscribers</a></li>
       <li><a href="/dashboard">User View</a></li>
       <li><a href="/api/auth/logout" style="color: #e74c3c; margin-top: 2rem;">Logout</a></li>
     </ul>
@@ -19,18 +23,72 @@
     <!-- Summary Cards -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
       <div style="background: var(--bg-light); padding: 2rem; border-radius: 20px; text-align: center; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.03);">
-        <h4 style="color: var(--text-light); font-size: 1rem; margin-bottom: 0.5rem; text-transform: uppercase; font-family: var(--font-sans);">Total Users</h4>
-        <p style="font-size: 2.5rem; font-weight: 700; color: var(--primary);"><%= stats.usersCount %></p>
+          <h4 style="color: var(--text-light); font-size: 0.8rem; margin-bottom: 0.5rem; text-transform: uppercase; font-family: var(--font-sans); letter-spacing: 1px;">Total Users</h4>
+          <p style="font-size: 2.5rem; font-weight: 700; color: var(--primary);"><%= stats.usersCount %></p>
       </div>
       <div style="background: var(--bg-light); padding: 2rem; border-radius: 20px; text-align: center; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.03);">
-        <h4 style="color: var(--text-light); font-size: 1rem; margin-bottom: 0.5rem; text-transform: uppercase; font-family: var(--font-sans);">Total Appointments</h4>
-        <p style="font-size: 2.5rem; font-weight: 700; color: var(--accent);"><%= stats.appointmentsCount %></p>
+          <h4 style="color: var(--text-light); font-size: 0.8rem; margin-bottom: 0.5rem; text-transform: uppercase; font-family: var(--font-sans); letter-spacing: 1px;">Appointments</h4>
+          <p style="font-size: 2.5rem; font-weight: 700; color: var(--accent);"><%= stats.appointmentsCount %></p>
       </div>
       <div style="background: var(--bg-light); padding: 2rem; border-radius: 20px; text-align: center; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.03);">
-        <h4 style="color: var(--text-light); font-size: 1rem; margin-bottom: 0.5rem; text-transform: uppercase; font-family: var(--font-sans);">Total Activities</h4>
-        <p style="font-size: 2.5rem; font-weight: 700; color: #3498db;"><%= stats.activitiesCount %></p>
+          <h4 style="color: var(--text-light); font-size: 0.8rem; margin-bottom: 0.5rem; text-transform: uppercase; font-family: var(--font-sans); letter-spacing: 1px;">System Health</h4>
+          <p style="font-size: 2.5rem; font-weight: 700; color: #3498db;"><%= stats.activitiesCount %></p>
       </div>
     </div>
+
+    <!-- Analytics Charts -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 3rem; margin-bottom: 5rem;">
+        <div style="background: white; padding: 2rem; border-radius: 25px; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.02);">
+            <h3 style="margin-bottom: 2rem; font-size: 1.2rem; color: var(--primary);">User Registration Growth</h3>
+            <canvas id="userChart" height="200"></canvas>
+        </div>
+        <div style="background: white; padding: 2rem; border-radius: 25px; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.02);">
+            <h3 style="margin-bottom: 2rem; font-size: 1.2rem; color: var(--primary);">Appointment Status Breakdown</h3>
+            <canvas id="aptChart" height="200"></canvas>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      // Appointment Chart
+      const aptCtx = document.getElementById('aptChart');
+      new Chart(aptCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Completed', 'Scheduled', 'Cancelled'],
+          datasets: [{
+            data: [12, 19, 3], // Mock data for now
+            backgroundColor: ['#2ecc71', '#3498db', '#e74c3c'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          cutout: '70%',
+          plugins: { legend: { position: 'bottom' } }
+        }
+      });
+
+      // User Chart
+      const userCtx = document.getElementById('userChart');
+      new Chart(userCtx, {
+        type: 'line',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr'],
+          datasets: [{
+            label: 'Total Users',
+            data: [50, 80, 120, <%= stats.usersCount %>],
+            borderColor: '#CF9D40',
+            backgroundColor: 'rgba(207,157,64,0.1)',
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+    </script>
 
     <!-- Recent Activities Table -->
     <div style="margin-bottom: 4rem;">

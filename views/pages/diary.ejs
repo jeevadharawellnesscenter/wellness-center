@@ -1,0 +1,144 @@
+<div class="container dashboard-grid">
+  <aside class="sidebar">
+    <h3>My Wellness</h3>
+    <ul class="sidebar-nav">
+      <li><a href="/dashboard">Appointments</a></li>
+      <li><a href="/diary" class="active">Nurture Diary</a></li>
+      <li><a href="/profile">My Profile</a></li>
+      <li><a href="/advisor">AI Advisor</a></li>
+    </ul>
+  </aside>
+
+  <main class="dash-content">
+    <div class="dash-header">
+      <div>
+        <h2>Nurture Diary</h2>
+        <p style="color: var(--text-light); margin-top: 0.5rem;">Track your journey to holistic harmony.</p>
+      </div>
+      <button class="btn btn-primary" onclick="showLogModal()">Log Today's State</button>
+    </div>
+
+    <!-- Stats summary -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-top: 3rem;">
+        <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 20px; border: 1px solid #dcfce7; text-align: center;">
+            <span style="display: block; font-size: 0.8rem; color: #166534; font-weight: 600; margin-bottom: 0.5rem;">AVG SLEEP</span>
+            <span id="avg-sleep" style="font-size: 1.8rem; font-weight: bold; color: var(--primary);">--</span> hrs
+        </div>
+        <div style="background: #eff6ff; padding: 1.5rem; border-radius: 20px; border: 1px solid #dbeafe; text-align: center;">
+            <span style="display: block; font-size: 0.8rem; color: #1e40af; font-weight: 600; margin-bottom: 0.5rem;">WATER INTAKE</span>
+            <span id="avg-water" style="font-size: 1.8rem; font-weight: bold; color: #1d4ed8;">--</span> L
+        </div>
+    </div>
+
+    <div style="margin-top: 4rem;">
+      <h3 style="margin-bottom: 1.5rem; color: var(--primary);">Previous Reflections</h3>
+      <div id="diary-list" style="display: flex; flex-direction: column; gap: 1rem;">
+        <p style="color: var(--text-light);">Loading your wellness history...</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Log Modal -->
+<div id="logModal" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+    <div style="background:white; padding:2.5rem; border-radius:20px; width:90%; max-width:450px;">
+      <h3>Reflect on Today</h3>
+      <form onsubmit="handleLogSubmit(event)" style="margin-top: 1.5rem;">
+        <div class="form-group">
+          <label>How is your mood?</label>
+          <select name="mood" class="form-control" required>
+            <option value="Excellent">Excellent - Peaceful</option>
+            <option value="Good">Good - Balanced</option>
+            <option value="Neutral">Neutral - Normal</option>
+            <option value="Tired">Tired - Low energy</option>
+            <option value="Stressed">Stressed - Uneasy</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Physical State</label>
+          <select name="physicalState" class="form-control" required>
+            <option value="Energetic">Energetic</option>
+            <option value="Balanced">Balanced</option>
+            <option value="Relaxed">Relaxed</option>
+            <option value="Low Energy">Low Energy</option>
+            <option value="In Pain">In Pain</option>
+          </select>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+            <div class="form-group" style="flex:1;">
+                <label>Sleep (hrs)</label>
+                <input type="number" name="sleepHours" step="0.5" class="form-control" required value="7">
+            </div>
+            <div class="form-group" style="flex:1;">
+                <label>Water (L)</label>
+                <input type="number" name="waterIntake" step="0.5" class="form-control" required value="2">
+            </div>
+        </div>
+        <div class="form-group">
+          <label>Additional Notes</label>
+          <textarea name="notes" class="form-control" rows="3" placeholder="I feel light after the mud therapy..."></textarea>
+        </div>
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+          <button type="button" class="btn btn-outline" style="flex: 1;" onclick="closeModal()">Close</button>
+          <button type="submit" class="btn btn-primary" style="flex: 1;">Save Log</button>
+        </div>
+      </form>
+    </div>
+</div>
+
+<script>
+    function showLogModal() { document.getElementById('logModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('logModal').style.display = 'none'; }
+
+    async function fetchDiary() {
+        try {
+            const res = await fetch('/api/diary');
+            const { data } = await res.json();
+            const list = document.getElementById('diary-list');
+            
+            if (data && data.length > 0) {
+                list.innerHTML = data.map(entry => `
+                    <div style="background: white; padding: 1.5rem; border-radius: 20px; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.03);">
+                        <div style="display: justify; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                            <span style="font-weight: 700; color: var(--text-dark);">${new Date(entry.date).toLocaleDateString(undefined, {weekday:'long', month:'short', day:'numeric'})}</span>
+                            <span style="background: var(--secondary); color: var(--primary); padding: 0.2rem 0.6rem; border-radius: 10px; font-size: 0.8rem; font-weight: 600;">${entry.mood}</span>
+                        </div>
+                        <p style="font-size: 0.95rem; color: var(--text-light);">${entry.notes || 'No notes for today.'}</p>
+                        <div style="margin-top: 1rem; display: flex; gap: 2rem; font-size: 0.85rem; color: var(--accent); font-weight: 600;">
+                            <span>💧 ${entry.waterIntake}L</span>
+                            <span>🌙 ${entry.sleepHours}h</span>
+                            <span>🧘 ${entry.physicalState}</span>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Calc stats
+                const totalSleep = data.reduce((acc, curr) => acc + curr.sleepHours, 0);
+                const totalWater = data.reduce((acc, curr) => acc + curr.waterIntake, 0);
+                document.getElementById('avg-sleep').textContent = (totalSleep / data.length).toFixed(1);
+                document.getElementById('avg-water').textContent = (totalWater / data.length).toFixed(1);
+            } else {
+                list.innerHTML = '<p style="color: var(--text-light);">Start your journey by making your first entry today.</p>';
+            }
+        } catch (err) { console.error(err); }
+    }
+
+    async function handleLogSubmit(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
+        try {
+            const res = await fetch('/api/diary', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            if(res.ok) {
+                closeModal();
+                fetchDiary();
+            }
+        } catch (err) { console.error(err); }
+    }
+
+    fetchDiary();
+</script>

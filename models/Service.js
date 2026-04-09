@@ -33,6 +33,10 @@ const serviceSchema = new mongoose.Schema({
     type: String,
     default: '/images/default-service.jpg'
   },
+  practitioner: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Practitioner'
+  },
   createdAt: {
     type: Date,
     default: Date.now

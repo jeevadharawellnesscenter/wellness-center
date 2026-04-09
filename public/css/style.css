@@ -25,6 +25,24 @@
   --transition-slow: all 0.7s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
+/* Dark Mode Overrides */
+[data-theme="dark"] {
+  --primary: #86efac;       /* Lighter green for dark bg */
+  --primary-dark: #f0fdf4;
+  --primary-light: #2A5A43;
+  --secondary: #0A1C13;     /* Deep dark forest */
+  --accent: #CF9D40;
+  --text-dark: #f8fcf8;     /* Off-white text */
+  --text-light: #a8b2ac;
+  --white: #123524;         /* Cards bg */
+  --bg-light: #050d09;      /* Main bg */
+  --glass-bg: rgba(10, 28, 19, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --shadow-sm: 0 4px 15px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 15px 35px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 25px 60px rgba(0, 0, 0, 0.4);
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 

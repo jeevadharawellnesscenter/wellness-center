@@ -22,6 +22,14 @@
     <div class="container nav-content">
       <a href="/" class="logo">Jeevadhara<span>.</span></a>
       
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <select id="langSelector" style="background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 0.3rem; border-radius: 8px; font-size: 0.8rem; cursor: pointer; font-family: var(--font-sans);">
+          <option value="en">English</option>
+          <option value="ta">தமிழ் (Tamil)</option>
+          <option value="hi">हिन्दी (Hindi)</option>
+        </select>
+      </div>
+      
       <!-- Hamburger Icon -->
       <div class="hamburger" id="hamburger">
         <span></span>
@@ -39,6 +47,8 @@
             <a href="/services/offline" class="<%= currentPath === '/services/offline' ? 'active' : '' %>">Offline</a>
           </div>
         </li>
+        <li><a href="/blogs" class="<%= currentPath === '/blogs' ? 'active' : '' %>">Insights</a></li>
+        <li><a href="/advisor" class="<%= currentPath === '/advisor' ? 'active' : '' %>">AI Advisor</a></li>
         <li><a href="/contact" class="<%= currentPath === '/contact' ? 'active' : '' %>">Contact</a></li>
 
         <% if(user) { %>
@@ -52,6 +62,11 @@
             <li><a href="/login" class="btn btn-outline <%= currentPath === '/login' ? 'active' : '' %>">Login</a></li>
             <li><a href="/register" class="btn btn-primary nav-signup-btn <%= currentPath === '/register' ? 'active' : '' %>">Sign Up</a></li>
             <% } %>
+        <li>
+          <button id="zenToggle" style="background: none; border: 1px solid var(--accent); color: var(--accent); padding: 0.4rem 0.8rem; border-radius: 20px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: var(--transition);">
+            ZEN MODE
+          </button>
+        </li>
       </ul>
     </div>
   </nav>
@@ -82,8 +97,18 @@
         <ul>
           <li><a href="/about">About Us</a></li>
           <li><a href="/services">Services</a></li>
+          <li><a href="/blogs">Wellness Insights</a></li>
           <li><a href="/contact">Contact</a></li>
         </ul>
+      </div>
+      <div class="footer-newsletter" style="max-width: 300px;">
+        <h3>Stay Nurtured</h3>
+        <p style="font-size: 0.9rem; margin-bottom: 1.5rem; color: rgba(255,255,255,0.6);">Subscribe for weekly wellness tips.</p>
+        <form onsubmit="handleNewsletter(event)" style="display: flex; gap: 0.5rem;">
+          <input type="email" id="news-email" placeholder="Email" required style="padding: 0.7rem; border-radius: 8px; border: none; flex: 1; font-family: var(--font-sans);">
+          <button type="submit" class="btn btn-primary" style="padding: 0.7rem 1rem; border-radius: 8px; background: var(--accent); white-space: nowrap;">Join</button>
+        </form>
+        <div id="news-msg" style="margin-top: 1rem; font-size: 0.8rem; display: none;"></div>
       </div>
     </div>
     <div class="footer-bottom">
@@ -101,6 +126,102 @@
         navLinks.classList.toggle('show');
       });
     }
+
+    async function handleNewsletter(e) {
+      e.preventDefault();
+      const email = document.getElementById('news-email').value;
+      const msg = document.getElementById('news-msg');
+      try {
+        const res = await fetch('/api/newsletter', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        msg.textContent = data.message;
+        msg.style.display = 'block';
+        msg.style.color = data.success ? '#2ecc71' : '#e74c3c';
+        if(data.success) document.getElementById('news-email').value = '';
+      } catch(err) { console.error(err); }
+    }
+
+    // Zen Mode Toggle Logic
+    const zenToggle = document.getElementById('zenToggle');
+    const currentTheme = localStorage.getItem('theme');
+
+    if (currentTheme) {
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      if (currentTheme === 'dark') zenToggle.textContent = 'SOLAR MODE';
+    }
+
+    zenToggle.addEventListener('click', () => {
+      let theme = document.documentElement.getAttribute('data-theme');
+      if (theme === 'dark') {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+        zenToggle.textContent = 'ZEN MODE';
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        zenToggle.textContent = 'SOLAR MODE';
+      }
+    });
+
+    // Language Translation Logic
+    const langSelector = document.getElementById('langSelector');
+    const translations = {
+      en: {
+        home: "Home", about: "About", services: "Services ▾", contact: "Contact", 
+        login: "Login", signup: "Sign Up", logout: "Logout", dashboard: "Dashboard",
+        zen: "ZEN MODE", solar: "SOLAR MODE"
+      },
+      ta: {
+        home: "முகப்பு", about: "எம்மைப் பற்றி", services: "சேவைகள் ▾", contact: "தொடர்பு", 
+        login: "உள்நுழை", signup: "பதிவு", logout: "வெளியேறு", dashboard: "டாஷ்போர்டு",
+        zen: "ஜென் நிலை", solar: "ஒளி நிலை"
+      },
+      hi: {
+        home: "होम", about: "हमारे बारे में", services: "सेवाएं ▾", contact: "संपर्क", 
+        login: "लॉगिन", signup: "साइन अप", logout: "लॉगआउट", dashboard: "डैशबोर्ड",
+        zen: "ज़ेन मोड", solar: "सौर मोड"
+      }
+    };
+
+    function applyTranslations(lang) {
+      const t = translations[lang];
+      if(!t) return;
+      const links = document.querySelectorAll('#navLinks a');
+      links.forEach(link => {
+        const text = link.textContent.trim().toLowerCase();
+        if (text.includes('home')) link.textContent = t.home;
+        if (text.includes('about')) link.textContent = t.about;
+        if (text.includes('services')) link.textContent = t.services;
+        if (text.includes('contact')) link.textContent = t.contact;
+        if (text.includes('login')) link.textContent = t.login;
+        if (text.includes('sign up')) link.textContent = t.signup;
+        if (text.includes('logout')) link.textContent = t.logout;
+        if (text.includes('dashboard')) link.textContent = t.dashboard;
+      });
+      const zenBtn = document.getElementById('zenToggle');
+      if(zenBtn) {
+        zenBtn.textContent = (document.documentElement.getAttribute('data-theme') === 'dark') ? t.solar : t.zen;
+      }
+    }
+
+    if(langSelector) {
+      langSelector.addEventListener('change', (e) => {
+        const lang = e.target.value;
+        localStorage.setItem('lang', lang);
+        applyTranslations(lang);
+      });
+
+      const savedLang = localStorage.getItem('lang');
+      if (savedLang) {
+        langSelector.value = savedLang;
+        setTimeout(() => applyTranslations(savedLang), 100);
+      }
+    }
+
   </script>
 </body>
 </html>

@@ -1,0 +1,105 @@
+<div class="container dashboard-grid">
+  <aside class="sidebar">
+    <h3>Admin Panel</h3>
+    <ul class="sidebar-nav">
+      <li><a href="/admin">Dashboard Overview</a></li>
+      <li><a href="/admin/services">Manage Services</a></li>
+      <li><a href="/admin/blogs">Manage Blogs</a></li>
+      <li><a href="/admin/practitioners" class="active">Manage Practitioners</a></li>
+      <li><a href="/admin/subscribers">Newsletter Subscribers</a></li>
+      <li><a href="/dashboard">User View</a></li>
+    </ul>
+  </aside>
+
+  <main class="dash-content">
+    <div class="dash-header">
+      <h2>Wellness Practitioners</h2>
+      <button class="btn btn-primary" onclick="showAddModal()">+ Add New Expert</button>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 2rem;">
+      <% practitioners.forEach(p => { %>
+        <div style="background: white; border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid #eee;">
+          <div style="height: 200px; background: url('<%= p.image %>') center/cover;"></div>
+          <div style="padding: 1.5rem;">
+            <h4 style="font-size: 1.2rem; margin-bottom: 0.3rem;"><%= p.name %></h4>
+            <span style="color: var(--accent); font-weight: 600; font-size: 0.9rem;"><%= p.specialization %></span>
+            <p style="font-size: 0.85rem; color: var(--text-light); margin-top: 0.8rem; line-height: 1.5;"><%= p.bio.substring(0, 100) %>...</p>
+            <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end;">
+              <button onclick="deletePractitioner('<%= p._id %>')" style="color: #e74c3c; background: none; border: none; cursor: pointer; font-weight: 500;">Remove</button>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </main>
+</div>
+
+<!-- Add Practitioner Modal -->
+<div id="practitionerModal" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+  <div style="background:white; padding:2.5rem; border-radius:20px; width:90%; max-width:500px;">
+    <h3>Register Wellness Practitioner</h3>
+    <form id="practitionerForm" onsubmit="handlePractitionerSubmit(event)" style="margin-top: 1.5rem;">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" name="name" class="form-control" required placeholder="e.g. Dr. Anjali Sharma">
+      </div>
+      <div class="form-group">
+        <label>Specialization</label>
+        <input type="text" name="specialization" class="form-control" required placeholder="e.g. Senior Naturopathist">
+      </div>
+      <div class="form-group">
+        <label>Short Bio</label>
+        <textarea name="bio" class="form-control" required rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Profile Image URL</label>
+        <input type="text" name="image" class="form-control" placeholder="Unsplash URL">
+      </div>
+      <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+        <button type="button" class="btn btn-outline" style="flex: 1;" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary" style="flex: 1;">Add Practitioner</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function showAddModal() {
+    document.getElementById('practitionerModal').style.display = 'flex';
+  }
+  function closeModal() {
+    document.getElementById('practitionerModal').style.display = 'none';
+  }
+  async function handlePractitionerSubmit(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+    
+    try {
+      const res = await fetch('/api/practitioners', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if(res.ok) {
+        alert('Practitioner added successfully');
+        window.location.reload();
+      } else {
+        alert('Failed to add practitioner');
+      }
+    } catch(err) {
+      console.error(err);
+      alert('Error saving practitioner');
+    }
+  }
+  async function deletePractitioner(id) {
+    if(!confirm('Remove this practitioner?')) return;
+    try {
+      const res = await fetch(`/api/practitioners/${id}`, { method: 'DELETE' });
+      if(res.ok) window.location.reload();
+    } catch(err) {
+      console.error(err);
+    }
+  }
+</script>

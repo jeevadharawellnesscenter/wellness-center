@@ -1,0 +1,50 @@
+<div class="container dashboard-grid">
+  <aside class="sidebar">
+    <h3>Admin Panel</h3>
+    <ul class="sidebar-nav">
+      <li><a href="/admin">Dashboard Overview</a></li>
+      <li><a href="/admin/services">Manage Services</a></li>
+      <li><a href="/admin/blogs">Manage Blogs</a></li>
+      <li><a href="/admin/practitioners">Manage Practitioners</a></li>
+      <li><a href="/admin/subscribers" class="active">Newsletter Subscribers</a></li>
+      <li><a href="/dashboard">User View</a></li>
+    </ul>
+  </aside>
+
+  <main class="dash-content">
+    <div class="dash-header">
+      <h2>Newsletter Subscribers</h2>
+    </div>
+
+    <div style="margin-top: 2rem; overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 15px; overflow: hidden; box-shadow: var(--shadow-sm);">
+        <thead>
+          <tr style="background: var(--primary-dark); color: white;">
+            <th style="padding: 1rem;">Email Address</th>
+            <th style="padding: 1rem;">Status</th>
+            <th style="padding: 1rem;">Join Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (subscribers && subscribers.length > 0) { %>
+            <% subscribers.forEach(sub => { %>
+              <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 1rem; font-weight: 500;"><%= sub.email %></td>
+                <td style="padding: 1rem;">
+                  <span style="padding: 0.3rem 0.6rem; border-radius: 5px; font-size: 0.8rem; font-weight: 600; background: <%= sub.isActive ? '#f0fdf4' : '#fee2e2' %>; color: <%= sub.isActive ? '#15803d' : '#b91c1c' %>;">
+                    <%= sub.isActive ? 'ACTIVE' : 'INACTIVE' %>
+                  </span>
+                </td>
+                <td style="padding: 1rem; color: var(--text-light);"><%= sub.subscribedAt.toLocaleDateString() %></td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="3" style="padding: 3rem; text-align: center; color: var(--text-light);">No subscribers yet.</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
