@@ -60,6 +60,22 @@ const offlineServices = [
     description: "Holistic coaching aiming to replace unhelpful habits with sustainable lifestyle routines.",
     price: 60,
     duration: 60
+  },
+  {
+    name: "Consultation",
+    category: "offline",
+    description: "In-person personalized session with our experts at the clinic for holistic wellness.",
+    price: 30,
+    duration: 45,
+    image: "https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=800"
+  },
+  {
+    name: "Counselling",
+    category: "offline",
+    description: "Compassionate in-person counselling sessions to support your mental and emotional health.",
+    price: 40,
+    duration: 60,
+    image: "https://images.unsplash.com/photo-1527137342181-19aab11a8ee8?q=80&w=800"
   }
 ];
 

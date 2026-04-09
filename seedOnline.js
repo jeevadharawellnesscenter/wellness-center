@@ -39,6 +39,22 @@ const onlineServices = [
     description: "Virtual therapy focusing on techniques and practices to effectively manage and reduce stress.",
     price: 35,
     duration: 45
+  },
+  {
+    name: "Consultation",
+    category: "online",
+    description: "Personalized virtual session with our experts to discuss your holistic wellness journey.",
+    price: 30,
+    duration: 45,
+    image: "https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=800"
+  },
+  {
+    name: "Counselling",
+    category: "online",
+    description: "Professional online mental health support and guidance for emotional well-being.",
+    price: 40,
+    duration: 60,
+    image: "https://images.unsplash.com/photo-1527137342181-19aab11a8ee8?q=80&w=800"
   }
 ];
 
