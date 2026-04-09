@@ -28,10 +28,24 @@ export const bookAppointment = async (req, res) => {
       user: req.user._id,
       userEmail: req.user.email,
       action: 'APPOINTMENT_CREATE',
-      description: `User booked an appointment for service ID: ${serviceId} on ${date} at ${time}`
+      description: `User booked an appointment for service: ${service.name} on ${date} at ${time}`
     });
 
-    res.status(201).json({ success: true, data: appointment });
+    // Build WhatsApp notification message for the clinic
+    const clinicWhatsApp = '917010612322';
+    const waMessage = encodeURIComponent(
+      `🌿 *New Appointment Booked!*\n\n` +
+      `👤 *Customer:* ${req.user.name || req.user.email}\n` +
+      `📧 *Email:* ${req.user.email}\n` +
+      `💆 *Service:* ${service.name}\n` +
+      `📂 *Category:* ${service.category || 'N/A'}\n` +
+      `📅 *Date:* ${new Date(date).toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}\n` +
+      `⏰ *Time:* ${time}\n\n` +
+      `Please confirm this appointment at your earliest convenience.`
+    );
+    const whatsappNotifyUrl = `https://wa.me/${clinicWhatsApp}?text=${waMessage}`;
+
+    res.status(201).json({ success: true, data: appointment, whatsappNotifyUrl });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
