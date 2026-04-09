@@ -108,5 +108,44 @@
         </table>
       </div>
     </div>
+
+    <!-- Registered Customers Table -->
+    <div style="margin-top: 4rem;">
+      <h3 style="margin-bottom: 1.5rem; font-size: 1.6rem; color: var(--primary);">Registered Customers</h3>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; background: var(--white); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-sm);">
+          <thead>
+            <tr style="background: var(--primary-dark); color: var(--white);">
+              <th style="padding: 1.2rem; font-weight: 500;">Name</th>
+              <th style="padding: 1.2rem; font-weight: 500;">Email</th>
+              <th style="padding: 1.2rem; font-weight: 500;">Role</th>
+              <th style="padding: 1.2rem; font-weight: 500;">Joined Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (allUsers && allUsers.length > 0) { %>
+              <% allUsers.forEach(u => { %>
+                <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                  <td style="padding: 1.2rem; font-weight: 500; color: var(--text-dark);"><%= u.name || 'N/A' %></td>
+                  <td style="padding: 1.2rem; color: var(--text-light);"><%= u.email %></td>
+                  <td style="padding: 1.2rem;">
+                    <% if(u.role === 'admin') { %>
+                      <span style="padding: 0.3rem 0.6rem; background: #fee2e2; color: #b91c1c; border-radius: 5px; font-size:0.8rem; font-weight: bold;">ADMIN</span>
+                    <% } else { %>
+                      <span style="padding: 0.3rem 0.6rem; background: #f0fdf4; color: #15803d; border-radius: 5px; font-size:0.8rem; font-weight: bold;">CUSTOMER</span>
+                    <% } %>
+                  </td>
+                  <td style="padding: 1.2rem; color: var(--text-light); font-size: 0.9rem;"><%= new Date(u.createdAt).toLocaleDateString() %></td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr>
+                <td colspan="4" style="padding: 2rem; text-align: center; color: var(--text-light);">No registered customers yet.</td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </main>
 </div>

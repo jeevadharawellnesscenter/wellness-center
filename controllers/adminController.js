@@ -23,6 +23,8 @@ export const getAdminDashboard = async (req, res) => {
       .sort({ date: -1 })
       .limit(5);
 
+    const allUsers = await User.find().select('-password').sort({ createdAt: -1 }).limit(20);
+
     res.render('pages/admin-dashboard', {
       title: 'Admin Dashboard',
       user: req.user,
@@ -32,7 +34,8 @@ export const getAdminDashboard = async (req, res) => {
         activitiesCount
       },
       recentActivities,
-      recentAppointments
+      recentAppointments,
+      allUsers
     });
   } catch (error) {
     console.error(error);
