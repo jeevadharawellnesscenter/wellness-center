@@ -1,81 +1,390 @@
-<section class="hero home-hero-bg">
-  <div class="container hero-inner" style="justify-content: center; gap: 0;">
-    <div class="hero-content" style="text-align: center; max-width: 800px; padding-right: 0; margin: 0 auto;">
-      <h1 style="color: white; text-shadow: 0 10px 20px rgba(0,0,0,0.3); font-size: clamp(3.5rem, 8vw, 5.5rem);">Awaken Your<br>Inner Balance</h1>
-      <p style="color: rgba(255,255,255,0.95); font-size: 1.25rem;">Experience holistic wellness treatments tailored to rejuvenate your mind, body, and spirit. Your journey to tranquility starts here.</p>
-      <div style="margin-top: 2.5rem; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
-        <a href="/services" class="btn btn-primary" style="margin: 0; border: 1px solid transparent;">Explore Services</a>
-        <a href="/about" class="btn btn-outline" style="border-color: rgba(255,255,255,0.5); color: white; margin: 0;">Our Story</a>
+<style>
+  /* ULTRA PREMIUM HOME PAGE STYLES */
+  .hero-premium {
+    position: relative;
+    height: 90vh; 
+    min-height: 700px;
+    display: flex;
+    align-items: center;
+    background: url('https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&q=80&w=2000') center/cover fixed; 
+  }
+  .hero-premium::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(8, 30, 18, 0.9) 0%, rgba(16, 42, 29, 0.4) 60%, transparent 100%);
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+  }
+  .hero-badge {
+    display: inline-block;
+    padding: 0.5rem 1.2rem;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--accent);
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: fadeUp 1s ease-out forwards;
+  }
+  .hero-title {
+    font-size: clamp(3.5rem, 8vw, 6rem);
+    font-family: var(--font-serif);
+    color: white;
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 1s ease-out 0.2s forwards;
+  }
+  .hero-subtitle {
+    font-size: 1.25rem;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.8;
+    margin-bottom: 3rem;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 1s ease-out 0.4s forwards;
+  }
+  .hero-buttons {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 1s ease-out 0.6s forwards;
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Trust Bar */
+  .trust-bar {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(16,42,29,0.08);
+    position: relative;
+    z-index: 10;
+    margin: -4rem auto 4rem;
+    width: 90%;
+    max-width: 1200px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: transform 0.3s;
+  }
+  .trust-item:hover { transform: translateY(-5px); }
+  .trust-icon { font-size: 2.2rem; background: var(--bg-light); padding: 1rem; border-radius: 50%; color: var(--primary); }
+  .trust-text h4 { margin: 0 0 0.2rem; font-size: 1.1rem; color: var(--text-dark); }
+  .trust-text p { margin: 0; font-size: 0.85rem; color: var(--text-light); }
+
+  /* Premium About Section */
+  .home-about {
+    padding: 6rem 0;
+    background: #fdfdfd;
+  }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+  .about-img-wrapper {
+    position: relative;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+  }
+  .about-img-wrapper img {
+    width: 100%;
+    height: 600px;
+    object-fit: cover;
+    transition: transform 0.7s;
+  }
+  .about-img-wrapper:hover img {
+    transform: scale(1.05);
+  }
+  .floating-badge {
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    background: var(--primary);
+    color: white;
+    padding: 2.5rem;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 10px solid #fdfdfd;
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Featured Services Carousel/Grid */
+  .featured-services {
+    padding: 8rem 0;
+    background: linear-gradient(135deg, #f0f7f4 0%, #e2ece9 100%);
+  }
+  .premium-card {
+    background: white;
+    border-radius: 25px;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.4s ease;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+    border: none;
+  }
+  .premium-card:hover {
+    transform: translateY(-15px);
+    box-shadow: 0 40px 60px rgba(16,42,29,0.1);
+  }
+  .card-img-bx {
+    height: 250px;
+    overflow: hidden;
+    position: relative;
+  }
+  .card-img-bx img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  .premium-card:hover .card-img-bx img {
+    transform: scale(1.1);
+  }
+  .card-content-bx {
+    padding: 2.5rem 2rem;
+    position: relative;
+  }
+  .card-icon-float {
+    position: absolute;
+    top: -30px;
+    right: 30px;
+    background: var(--accent);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    box-shadow: 0 10px 20px rgba(245, 158, 11, 0.4);
+    color: white;
+  }
+
+  /* Testimonials */
+  .testimonials {
+    padding: 8rem 0;
+    text-align: center;
+    background: white;
+  }
+  .testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 4rem; }
+  .testimonial-box {
+    padding: 3rem 2rem;
+    background: #fdfdfd;
+    border: 1px solid #f0f0f0;
+    border-radius: 20px;
+    transition: box-shadow 0.3s;
+    text-align: left;
+    position: relative;
+  }
+  .testimonial-box:hover { box-shadow: 0 20px 40px rgba(0,0,0,0.04); }
+  .quote-mark { font-size: 4rem; color: var(--primary-light); opacity: 0.2; position: absolute; top: 10px; right: 20px; font-family: serif; }
+
+  @media (max-width: 900px) {
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .about-img-wrapper img { height: 400px; }
+    .floating-badge { display: none; }
+    .hero-title { font-size: 3.5rem; }
+  }
+</style>
+
+<!-- ULTRA PREMIUM HERO SECTION -->
+<section class="hero-premium">
+  <div class="container">
+    <div class="hero-content">
+      <span class="hero-badge">Welcome to Jeevadhara</span>
+      <h1 class="hero-title">Awaken Your<br>Inner Harmony</h1>
+      <p class="hero-subtitle">
+        Embark on a transformative journey of holistic wellness. We blend ancient Naturopathic wisdom with modern luxury to rejuvenate your mind, body, and spirit.
+      </p>
+      <div class="hero-buttons">
+        <a href="/services" class="btn btn-primary" style="padding: 1rem 2.5rem; border-radius: 30px; font-size: 1.1rem; box-shadow: 0 10px 20px rgba(22, 101, 52, 0.4);">Discover Therapies</a>
+        <a href="/about" class="btn btn-outline" style="padding: 1rem 2.5rem; border-radius: 30px; font-size: 1.1rem; border-color: rgba(255,255,255,0.5); color: white;">Our Journey</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- About Section Added by Request -->
-<section class="section" style="background-color: var(--white); padding: 5rem 0; border-bottom: 1px solid rgba(0,0,0,0.03);">
-  <div class="container" style="text-align: center; max-width: 800px;">
-    <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem; color: var(--primary); font-family: var(--font-serif);">Welcome to Jeevadhara</h2>
-    <p style="color: var(--text-light); font-size: 1.1rem; line-height: 1.8; margin-bottom: 2rem;">
-      Jeevadhara Clinic is a premier holistic health and wellness sanctuary dedicated to natural healing through naturopathy, yoga, and authentic Ayurvedic therapies. The name 'Jeevadhara' translates to the 'flow of life', reflecting our unwavering mission to restore health by reconnecting the human body with nature. Experience serenity, deep relaxation, and expert personalized care designed specifically for your optimal well-being.
-    </p>
-    <a href="/about" class="btn btn-outline">Read Our Full Story</a>
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-item">
+    <div class="trust-icon">🌿</div>
+    <div class="trust-text">
+      <h4>100% Natural</h4>
+      <p>Holistic & Organic Care</p>
+    </div>
+  </div>
+  <div class="trust-item">
+    <div class="trust-icon">👨‍⚕️</div>
+    <div class="trust-text">
+      <h4>Expert Healers</h4>
+      <p>Certified Practitioners</p>
+    </div>
+  </div>
+  <div class="trust-item">
+    <div class="trust-icon">✨</div>
+    <div class="trust-text">
+      <h4>Personalised</h4>
+      <p>Tailored Treatments</p>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT EXCERPT -->
+<section class="home-about">
+  <div class="container about-grid">
+    <div class="about-img-wrapper">
+      <img src="https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&q=80&w=800" alt="Spa and Wellness">
+      <div class="floating-badge">
+        <span style="font-size: 2.5rem; font-weight: bold; line-height: 1;">15+</span>
+        <span style="font-size: 0.8rem; text-transform: uppercase;">Years Exp</span>
+      </div>
+    </div>
+    <div class="about-text">
+      <span style="color: var(--accent); font-weight: 600; letter-spacing: 2px; text-transform: uppercase; font-size: 0.9rem;">The Flow of Life</span>
+      <h2 style="font-size: 3rem; font-family: var(--font-serif); margin: 1rem 0 2rem; color: var(--primary-dark); line-height: 1.2;">Sanctuary for the Soul,<br>Healing for the Body</h2>
+      <p style="font-size: 1.1rem; color: var(--text-light); margin-bottom: 1.5rem; line-height: 1.8;">
+        At Jeevadhara, we believe true wellness comes from aligning yourself with nature. We provide deeply immersive, completely drug-free therapies drawn from the world's oldest healing traditions.
+      </p>
+      <p style="font-size: 1.1rem; color: var(--text-light); margin-bottom: 2.5rem; line-height: 1.8;">
+        Whether you are seeking relief from chronic pain or just a momentary escape into profound relaxation, our sanctuary is designed exclusively for your rejuvenation.
+      </p>
+      <a href="/about" class="btn btn-outline" style="border-color: var(--primary); color: var(--primary); border-radius: 30px; padding: 0.8rem 2rem;">Read Our Full Story &rarr;</a>
+    </div>
   </div>
 </section>
-<section class="section">
+
+<!-- PREMIUM FEATURED SERVICES -->
+<section class="featured-services">
   <div class="container">
-    <div class="section-title">
-      <h2>Featured Therapies</h2>
-      <p>Discover our most popular treatments designed specifically to elevate your wellbeing and restore your natural
-        harmony.</p>
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4rem; flex-wrap: wrap; gap: 2rem;">
+      <div style="max-width: 600px;">
+        <span style="color: var(--primary); font-weight: 600; letter-spacing: 2px; text-transform: uppercase; font-size: 0.9rem;">Curated Experiences</span>
+        <h2 style="font-size: 3rem; font-family: var(--font-serif); color: var(--primary-dark); margin-top: 1rem;">Oasis of Therapies</h2>
+      </div>
+      <a href="/services" class="btn btn-primary" style="background: white; color: var(--primary); border-radius: 30px; box-shadow: 0 10px 20px rgba(0,0,0,0.05);">View All Services</a>
     </div>
 
     <div class="services-grid">
-      <!-- Static Mockups for UI presentation until DB is populated -->
-      <div class="service-card">
-        <div class="service-img"
-          style="background-image: url('https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&q=80&w=800');">
+      <!-- Card 1 -->
+      <div class="premium-card">
+        <div class="card-img-bx">
+          <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&q=80&w=800" alt="Massage">
         </div>
-        <div class="service-content">
-          <span class="service-cat">Body</span>
-          <h3>Aromatherapy Massage</h3>
-          <p>A deeply relaxing full-body massage using essential oils to melt away tension and stress.</p>
-          <div class="service-footer">
-            <a href="/login" class="btn btn-outline" style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">Book Now</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="service-card">
-        <div class="service-img"
-          style="background-image: url('https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&q=80&w=800');">
-        </div>
-        <div class="service-content">
-          <span class="service-cat">Skin</span>
-          <h3>Radiance Facial</h3>
-          <p>Revitalize your complexion with our signature facial, leaving your skin glowing and nourished.</p>
-          <div class="service-footer">
-            <a href="/login" class="btn btn-outline" style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">Book Now</a>
-          </div>
+        <div class="card-content-bx">
+          <div class="card-icon-float">🌿</div>
+          <span style="color: var(--text-light); font-size: 0.9rem; font-weight: 600;">BODYWORK</span>
+          <h3 style="font-size: 1.5rem; margin: 0.5rem 0 1rem; color: var(--text-dark);">Aromatherapy Massage</h3>
+          <p style="color: var(--text-light); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">A deeply relaxing full-body massage using highly potent essential oils designed to melt away physical tension.</p>
+          <a href="/login" style="color: var(--primary); font-weight: bold; text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">Book Session &rarr;</a>
         </div>
       </div>
 
-      <div class="service-card">
-        <div class="service-img"
-          style="background-image: url('https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?auto=format&fit=crop&q=80&w=800');">
+      <!-- Card 2 -->
+      <div class="premium-card">
+        <div class="card-img-bx">
+          <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=800" alt="Diet">
         </div>
-        <div class="service-content">
-          <span class="service-cat">Yoga</span>
-          <h3>Vinyasa Flow Session</h3>
-          <p>Awaken your energy through a guided sequence of breathable, flowing postures.</p>
-          <div class="service-footer">
-            <a href="/login" class="btn btn-outline" style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">Book Now</a>
-          </div>
+        <div class="card-content-bx">
+          <div class="card-icon-float">🥗</div>
+          <span style="color: var(--text-light); font-size: 0.9rem; font-weight: 600;">NUTRITION</span>
+          <h3 style="font-size: 1.5rem; margin: 0.5rem 0 1rem; color: var(--text-dark);">Detox Diet Plans</h3>
+          <p style="color: var(--text-light); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">Revitalize your internal ecosystem with an expertly crafted, 100% natural, holistic detox diet plan.</p>
+          <a href="/login" style="color: var(--primary); font-weight: bold; text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">Book Session &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="premium-card">
+        <div class="card-img-bx">
+          <img src="https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?auto=format&fit=crop&q=80&w=800" alt="Yoga">
+        </div>
+        <div class="card-content-bx">
+          <div class="card-icon-float">🧘‍♀️</div>
+          <span style="color: var(--text-light); font-size: 0.9rem; font-weight: 600;">MINDFULNESS</span>
+          <h3 style="font-size: 1.5rem; margin: 0.5rem 0 1rem; color: var(--text-dark);">Vinyasa Flow Yoga</h3>
+          <p style="color: var(--text-light); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">Awaken your dormant energy through a guided, breathable sequence of flowing yogic postures.</p>
+          <a href="/login" style="color: var(--primary); font-weight: bold; text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">Book Session &rarr;</a>
         </div>
       </div>
     </div>
+  </div>
+</section>
 
-    <div style="text-align: center; margin-top: 4rem;">
-      <a href="/services" class="btn btn-primary">View All Services</a>
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="container">
+    <span style="color: var(--accent); font-weight: 600; letter-spacing: 2px; text-transform: uppercase; font-size: 0.9rem;">Testimonials</span>
+    <h2 style="font-size: 3rem; font-family: var(--font-serif); color: var(--text-dark); margin-top: 1rem;">Stories of Healing</h2>
+    
+    <div class="testimonial-grid">
+      <div class="testimonial-box">
+        <div class="quote-mark">"</div>
+        <div style="color: #fbbf24; font-size: 1.2rem; margin-bottom: 1rem;">★★★★★</div>
+        <p style="color: var(--text-light); font-size: 1.05rem; line-height: 1.7; font-style: italic; margin-bottom: 1.5rem;">"I walked into Jeevadhara carrying months of stress. The aromatherapy massage and expert care completely reset my system. I haven't felt this light in years."</p>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div style="width: 50px; height: 50px; border-radius: 50%; background: #ddd; background-image: url('https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=100&q=80'); background-size: cover;"></div>
+          <div>
+            <h5 style="margin: 0; font-size: 1rem;">Sarah Jenkins</h5>
+            <span style="font-size: 0.8rem; color: var(--text-light);">Yoga Practitioner</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-box">
+        <div class="quote-mark">"</div>
+        <div style="color: #fbbf24; font-size: 1.2rem; margin-bottom: 1rem;">★★★★★</div>
+        <p style="color: var(--text-light); font-size: 1.05rem; line-height: 1.7; font-style: italic; margin-bottom: 1.5rem;">"Their holistic approach to diet and nutrition has changed my lifestyle. My chronic fatigue is gone, and the practitioners are genuinely invested in your recovery."</p>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div style="width: 50px; height: 50px; border-radius: 50%; background: #ddd; background-image: url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80'); background-size: cover;"></div>
+          <div>
+            <h5 style="margin: 0; font-size: 1rem;">Michael Chen</h5>
+            <span style="font-size: 0.8rem; color: var(--text-light);">Business Consultant</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="testimonial-box">
+        <div class="quote-mark">"</div>
+        <div style="color: #fbbf24; font-size: 1.2rem; margin-bottom: 1rem;">★★★★★</div>
+        <p style="color: var(--text-light); font-size: 1.05rem; line-height: 1.7; font-style: italic; margin-bottom: 1.5rem;">"The serene environment alone is enough to heal you. But combined with their authentic Ayurvedic therapies... it is nothing short of a sanctuary for the soul."</p>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div style="width: 50px; height: 50px; border-radius: 50%; background: #ddd; background-image: url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=100&q=80'); background-size: cover;"></div>
+          <div>
+            <h5 style="margin: 0; font-size: 1rem;">Priya Sharma</h5>
+            <span style="font-size: 0.8rem; color: var(--text-light);">Holistic Wellness Advocate</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
