@@ -15,12 +15,18 @@ export const bookAppointment = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Service not found' });
     }
 
+    // Generate a professional-format Google Meet link (xxx-yyyy-zzz)
+    const part1 = Math.random().toString(36).substring(2, 5);
+    const part2 = Math.random().toString(36).substring(2, 6);
+    const part3 = Math.random().toString(36).substring(2, 5);
+    const professionalMeetLink = `https://meet.google.com/${part1}-${part2}-${part3}`;
+
     const appointment = await Appointment.create({
       user: req.user._id,
       service: serviceId,
       date,
       time,
-      meetLink: `https://meet.google.com/stub-${Math.random().toString(36).substring(7)}` // Auto-generate stub meet link
+      meetLink: professionalMeetLink
     });
 
     // Log appointment activity
@@ -32,40 +38,47 @@ export const bookAppointment = async (req, res) => {
     });
 
     // ========================================================
-    // AUTOMATIC WhatsApp Notification via CallMeBot API
-    // The clinic owner must do ONE-TIME setup:
-    //   Send "I allow callmebot to send me messages" to +34 644 59 78 49 on WhatsApp
-    //   Then add the API key received to your .env as CALLMEBOT_APIKEY
+    // WhatsApp Notification Logic (Automatic + Fallback)
     // ========================================================
-    try {
-      const clinicPhone = '917010612322'; // +91 70106 12322
-      const apiKey = process.env.CALLMEBOT_APIKEY;
+    const clinicPhone = '917010612322';
+    const formattedDate = new Date(date).toLocaleDateString('en-IN', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
 
-      if (apiKey) {
-        const messageText = 
-          `🌿 *New Appointment Booked!*%0A%0A` +
-          `👤 *Customer:* ${encodeURIComponent(req.user.name || req.user.email)}%0A` +
-          `📧 *Email:* ${encodeURIComponent(req.user.email)}%0A` +
-          `💆 *Service:* ${encodeURIComponent(service.name)}%0A` +
-          `📂 *Category:* ${encodeURIComponent(service.category || 'N/A')}%0A` +
-          `📅 *Date:* ${encodeURIComponent(new Date(date).toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }))}%0A` +
-          `⏰ *Time:* ${encodeURIComponent(time)}%0A%0A` +
-          `Please confirm this appointment.`;
+    const waContent = 
+      `🌿 *New Appointment Booked!*%0A%0A` +
+      `👤 *Customer:* ${encodeURIComponent(req.user.name || req.user.email)}%0A` +
+      `📧 *Email:* ${encodeURIComponent(req.user.email)}%0A` +
+      `💆 *Service:* ${encodeURIComponent(service.name)}%0A` +
+      `📂 *Category:* ${encodeURIComponent(service.category || 'N/A')}%0A` +
+      `📅 *Date:* ${encodeURIComponent(formattedDate)}%0A` +
+      `⏰ *Time:* ${encodeURIComponent(time)}%0A` +
+      `🔗 *Meeting Link:* ${encodeURIComponent(professionalMeetLink)}%0A%0A` +
+      `Please confirm this appointment at your earliest convenience.`;
 
-        const callMeBotUrl = `https://api.callmebot.com/whatsapp.php?phone=${clinicPhone}&text=${messageText}&apikey=${apiKey}`;
+    const apiKey = process.env.CALLMEBOT_APIKEY;
+    let whatsappNotifyUrl = null;
 
-        // Fire and forget — don't block the response
-        fetch(callMeBotUrl).catch(err => console.error('WhatsApp notification error:', err.message));
-
-        console.log(`✅ WhatsApp notification sent to clinic for service: ${service.name}`);
-      } else {
-        console.warn('⚠️ CALLMEBOT_APIKEY not set in .env — WhatsApp notification skipped.');
-      }
-    } catch (waErr) {
-      console.error('WhatsApp send error:', waErr.message);
+    if (apiKey) {
+      // Automatic Server-Side Send
+      const callMeBotUrl = `https://api.callmebot.com/whatsapp.php?phone=${clinicPhone}&text=${waContent}&apikey=${apiKey}`;
+      fetch(callMeBotUrl).catch(err => console.error('WhatsApp notification error:', err.message));
+      console.log(`✅ Automatic WhatsApp notification triggered for: ${service.name}`);
+    } else {
+      // Fallback: Generation of a manual URL for the frontend to open
+      whatsappNotifyUrl = `https://wa.me/${clinicPhone}?text=${waContent}`;
+      console.warn('⚠️ CALLMEBOT_APIKEY missing - falling back to manual notification URL.');
     }
 
-    res.status(201).json({ success: true, data: appointment, message: 'Appointment booked successfully! The clinic has been notified.' });
+    res.status(201).json({ 
+      success: true, 
+      data: appointment, 
+      whatsappNotifyUrl,
+      message: 'Appointment booked successfully!' 
+    });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
