@@ -143,11 +143,7 @@
       });
       const data = await res.json();
       if (data.success) {
-        alert('✅ Appointment Booked! The clinic has been notified via WhatsApp.');
-        // Open WhatsApp notification to clinic automatically
-        if (data.whatsappNotifyUrl) {
-          window.open(data.whatsappNotifyUrl, '_blank');
-        }
+        alert('✅ Appointment Booked! The clinic has been notified automatically.');
         window.location.href = '/dashboard';
       } else {
         if (res.status === 401) window.location.href = '/login';

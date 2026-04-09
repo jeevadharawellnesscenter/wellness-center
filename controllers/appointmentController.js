@@ -31,21 +31,41 @@ export const bookAppointment = async (req, res) => {
       description: `User booked an appointment for service: ${service.name} on ${date} at ${time}`
     });
 
-    // Build WhatsApp notification message for the clinic
-    const clinicWhatsApp = '917010612322';
-    const waMessage = encodeURIComponent(
-      `🌿 *New Appointment Booked!*\n\n` +
-      `👤 *Customer:* ${req.user.name || req.user.email}\n` +
-      `📧 *Email:* ${req.user.email}\n` +
-      `💆 *Service:* ${service.name}\n` +
-      `📂 *Category:* ${service.category || 'N/A'}\n` +
-      `📅 *Date:* ${new Date(date).toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}\n` +
-      `⏰ *Time:* ${time}\n\n` +
-      `Please confirm this appointment at your earliest convenience.`
-    );
-    const whatsappNotifyUrl = `https://wa.me/${clinicWhatsApp}?text=${waMessage}`;
+    // ========================================================
+    // AUTOMATIC WhatsApp Notification via CallMeBot API
+    // The clinic owner must do ONE-TIME setup:
+    //   Send "I allow callmebot to send me messages" to +34 644 59 78 49 on WhatsApp
+    //   Then add the API key received to your .env as CALLMEBOT_APIKEY
+    // ========================================================
+    try {
+      const clinicPhone = '917010612322'; // +91 70106 12322
+      const apiKey = process.env.CALLMEBOT_APIKEY;
 
-    res.status(201).json({ success: true, data: appointment, whatsappNotifyUrl });
+      if (apiKey) {
+        const messageText = 
+          `🌿 *New Appointment Booked!*%0A%0A` +
+          `👤 *Customer:* ${encodeURIComponent(req.user.name || req.user.email)}%0A` +
+          `📧 *Email:* ${encodeURIComponent(req.user.email)}%0A` +
+          `💆 *Service:* ${encodeURIComponent(service.name)}%0A` +
+          `📂 *Category:* ${encodeURIComponent(service.category || 'N/A')}%0A` +
+          `📅 *Date:* ${encodeURIComponent(new Date(date).toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }))}%0A` +
+          `⏰ *Time:* ${encodeURIComponent(time)}%0A%0A` +
+          `Please confirm this appointment.`;
+
+        const callMeBotUrl = `https://api.callmebot.com/whatsapp.php?phone=${clinicPhone}&text=${messageText}&apikey=${apiKey}`;
+
+        // Fire and forget — don't block the response
+        fetch(callMeBotUrl).catch(err => console.error('WhatsApp notification error:', err.message));
+
+        console.log(`✅ WhatsApp notification sent to clinic for service: ${service.name}`);
+      } else {
+        console.warn('⚠️ CALLMEBOT_APIKEY not set in .env — WhatsApp notification skipped.');
+      }
+    } catch (waErr) {
+      console.error('WhatsApp send error:', waErr.message);
+    }
+
+    res.status(201).json({ success: true, data: appointment, message: 'Appointment booked successfully! The clinic has been notified.' });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
