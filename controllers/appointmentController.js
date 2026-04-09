@@ -1,6 +1,7 @@
 import Appointment from '../models/Appointment.js';
 import Service from '../models/Service.js';
 import ActivityLog from '../models/ActivityLog.js';
+import { createGoogleMeet } from '../utils/googleMeet.js';
 
 // @desc    Book an appointment
 // @route   POST /api/appointments
@@ -15,11 +16,23 @@ export const bookAppointment = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Service not found' });
     }
 
-    // Generate a professional-format Google Meet link (xxx-yyyy-zzz)
-    const part1 = Math.random().toString(36).substring(2, 5);
-    const part2 = Math.random().toString(36).substring(2, 6);
-    const part3 = Math.random().toString(36).substring(2, 5);
-    const professionalMeetLink = `https://meet.google.com/${part1}-${part2}-${part3}`;
+    // Generate Real Google Meet Link
+    let professionalMeetLink = await createGoogleMeet({
+      serviceName: service.name,
+      date,
+      time,
+      userName: req.user.name || req.user.email,
+      userEmail: req.user.email
+    });
+
+    // Fallback if Google API is not shared or fails
+    if (!professionalMeetLink) {
+      const part1 = Math.random().toString(36).substring(2, 5);
+      const part2 = Math.random().toString(36).substring(2, 6);
+      const part3 = Math.random().toString(36).substring(2, 5);
+      professionalMeetLink = `https://meet.google.com/${part1}-${part2}-${part3}`;
+      console.warn('⚠️ Falling back to formatted random Meet link.');
+    }
 
     const appointment = await Appointment.create({
       user: req.user._id,
