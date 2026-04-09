@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import generateToken from '../utils/generateToken.js';
 import ActivityLog from '../models/ActivityLog.js';
+import crypto from 'crypto';
 
 // @desc    Register new user
 // @route   POST /api/auth/register
@@ -117,4 +118,73 @@ export const logoutUser = (req, res) => {
 
   // Also redirect for UI integration
   res.redirect('/login');
+};
+
+// @desc    Forgot password — generate reset token
+// @route   POST /api/auth/forgot-password
+// @access  Public
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'No account found with that email address.' });
+    }
+
+    // Get raw reset token and save hashed version on user
+    const resetToken = user.getResetPasswordToken();
+    await user.save({ validateBeforeSave: false });
+
+    // Build the reset URL (returned in response for on-screen display)
+    const resetUrl = `${req.protocol}://${req.get('host')}/reset-password/${resetToken}`;
+
+    res.json({
+      success: true,
+      message: 'Reset link generated. Use it within 10 minutes.',
+      resetUrl
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// @desc    Reset password using token
+// @route   POST /api/auth/reset-password/:token
+// @access  Public
+export const resetPassword = async (req, res) => {
+  try {
+    // Hash the raw token from URL
+    const resetPasswordToken = crypto
+      .createHash('sha256')
+      .update(req.params.token)
+      .digest('hex');
+
+    const user = await User.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ success: false, message: 'Invalid or expired reset token. Please request a new one.' });
+    }
+
+    const { password, confirmPassword } = req.body;
+    if (!password || password.length < 6) {
+      return res.status(400).json({ success: false, message: 'Password must be at least 6 characters.' });
+    }
+    if (password !== confirmPassword) {
+      return res.status(400).json({ success: false, message: 'Passwords do not match.' });
+    }
+
+    // Set new password — the pre-save hook will hash it
+    user.password = password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+
+    res.json({ success: true, message: 'Password reset successful! You can now log in.' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
 };
