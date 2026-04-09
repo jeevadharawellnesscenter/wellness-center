@@ -51,8 +51,8 @@
   
   /* Stats Box - Floats out of hero */
   .stats-wrapper {
-    background: linear-gradient(90deg, var(--primary-dark), var(--primary));
-    color: white;
+    background: linear-gradient(135deg, #064e3b, #166534); /* Deep explicit green */
+    color: #ffffff;
     padding: 3rem;
     border-radius: 20px;
     box-shadow: 0 20px 40px rgba(22, 101, 52, 0.2);
@@ -74,16 +74,17 @@
   .stat-number {
     font-size: 3.5rem;
     font-weight: 700;
-    color: var(--accent);
+    color: #fce7f3; /* Light pink/white for numbers or stick to accent */
+    color: var(--accent, #f59e0b); 
     margin-bottom: 0.5rem;
     line-height: 1;
   }
   .stat-label {
-    font-size: 1.1rem;
-    font-weight: 500;
+    font-size: 1.15rem;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
-    opacity: 0.9;
+    color: rgba(255, 255, 255, 0.95); /* Explicit white for labels */
   }
 
   /* Two Column Story Layout with Overlap Images */
