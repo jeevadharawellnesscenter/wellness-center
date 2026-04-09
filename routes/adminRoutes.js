@@ -1,5 +1,11 @@
 import express from 'express';
-import { getAdminDashboard } from '../controllers/adminController.js';
+import { 
+  getAdminDashboard, 
+  getAdminServices, 
+  getAdminBlogs, 
+  getAdminPractitioners, 
+  getAdminSubscribers 
+} from '../controllers/adminController.js';
 import { protect, admin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();

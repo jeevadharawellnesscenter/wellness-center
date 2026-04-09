@@ -2,6 +2,9 @@ import User from '../models/User.js';
 import Appointment from '../models/Appointment.js';
 import ActivityLog from '../models/ActivityLog.js';
 import Service from '../models/Service.js';
+import Practitioner from '../models/Practitioner.js';
+import Blog from '../models/Blog.js';
+import Newsletter from '../models/Newsletter.js';
 
 // @desc    Get admin dashboard data
 // @route   GET /admin
@@ -97,7 +100,6 @@ export const getAdminPractitioners = async (req, res) => {
 // @access  Private/Admin
 export const getAdminSubscribers = async (req, res) => {
   try {
-    const Newsletter = (await import('../models/Newsletter.js')).default;
     const subscribers = await Newsletter.find().sort({ subscribedAt: -1 });
     res.render('pages/admin-subscribers', {
       title: 'Manage Subscribers',
