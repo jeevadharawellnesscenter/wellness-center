@@ -1,6 +1,7 @@
 /* Core Premium Design System */
 :root {
   --primary: #123524;       /* Deep Forest Green - High End */
+  --primary-dark: #0A1C13;  /* Darkest Forest Green - ADDED */
   --primary-light: #2A5A43; /* Rich Organic Green */
   --secondary: #F4F1EB;     /* Alabaster / Beige */
   --accent: #CF9D40;        /* Luxury Gold */
@@ -60,8 +61,8 @@ ul { list-style: none; }
   position: relative; overflow: hidden;
 }
 .btn-primary {
-  background: var(--primary) !important;
-  color: var(--white) !important;
+  background: var(--primary);
+  color: var(--white);
   box-shadow: var(--shadow-md);
 }
 .btn-primary:hover {
@@ -318,9 +319,9 @@ main { min-height: 80vh; }
 
 /* Global Animations */
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-.section { animation: fadeInUp 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards; opacity: 0; }
-.section:nth-child(2) { animation-delay: 0.2s; }
-.section:nth-child(3) { animation-delay: 0.4s; }
+/* NOTE: opacity is NOT set to 0 globally - let each section be visible by default */
+.section { opacity: 1; }
+.animate-on-load { animation: fadeInUp 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards; opacity: 0; }
 
 /* Responsive Adjustments */
 @media (max-width: 992px) {
