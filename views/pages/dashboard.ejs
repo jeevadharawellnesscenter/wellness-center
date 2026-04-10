@@ -22,16 +22,43 @@
         <p style="color: var(--text-light);">Loading appointments...</p>
       </div>
 
-      <!-- Wellness Roadmap Section -->
-      <div style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #eee;">
-        <h3 style="margin-bottom: 2rem;">My Wellness Roadmap</h3>
-        <div id="roadmap-suggestion" style="background: linear-gradient(135deg, #f0f7f4 0%, #ffffff 100%); padding: 2rem; border-radius: 25px; border: 1px solid rgba(18,53,36,0.05); display: flex; gap: 2rem; align-items: center;">
-            <div style="font-size: 3rem;">🌱</div>
-            <div>
-                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Suggested Next Step: Hydrotherapy</h4>
-                <p style="color: var(--text-light); font-size: 0.95rem; line-height: 1.6;">Based on your recent interest in detoxing, we recommend a 60-min Hydrotherapy session to rejuvenate your circulation.</p>
-                <a href="/services/offline" class="btn btn-outline" style="margin-top: 1rem; padding: 0.5rem 1.2rem; font-size: 0.85rem;">View Details</a>
-            </div>
+      <!-- Interactive Wellness Roadmap Section -->
+      <div style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid rgba(0,0,0,0.05);">
+        <h3 style="margin-bottom: 2.5rem; display: flex; align-items: center; gap: 1rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          My Wellness Journey
+        </h3>
+
+        <div class="roadmap-container" style="position: relative; padding-left: 50px;">
+          <!-- SVG Path -->
+          <svg style="position: absolute; left: 15px; top: 0; width: 4px; height: 100%;" preserveAspectRatio="none">
+            <line x1="2" y1="0" x2="2" y2="100%" stroke="rgba(207,157,64,0.15)" stroke-width="2" stroke-dasharray="8,8" />
+          </svg>
+
+          <!-- Roadmap Nodes -->
+          <div class="roadmap-node active" style="margin-bottom: 3rem; position: relative;">
+            <div class="node-circle" style="position: absolute; left: -44px; top: 5px; width: 22px; height: 22px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 15px var(--accent); border: 4px solid var(--white);"></div>
+            <h4 style="color: var(--primary);">The Awakening</h4>
+            <p style="font-size: 0.9rem; color: var(--text-light);">Account created. Your journey to holistic health has begun.</p>
+          </div>
+
+          <div class="roadmap-node" id="node-first-session" style="margin-bottom: 3rem; position: relative; opacity: 0.5;">
+            <div class="node-circle" style="position: absolute; left: -44px; top: 5px; width: 22px; height: 22px; background: #ddd; border-radius: 50%; border: 4px solid var(--white);"></div>
+            <h4 style="color: var(--text-dark);">First Connection</h4>
+            <p style="font-size: 0.9rem; color: var(--text-light);">Complete your first wellness session to unlock this milestone.</p>
+          </div>
+
+          <div class="roadmap-node" id="node-diary-master" style="margin-bottom: 3rem; position: relative; opacity: 0.5;">
+            <div class="node-circle" style="position: absolute; left: -44px; top: 5px; width: 22px; height: 22px; background: #ddd; border-radius: 50%; border: 4px solid var(--white);"></div>
+            <h4 style="color: var(--text-dark);">Mindful Explorer</h4>
+            <p style="font-size: 0.9rem; color: var(--text-light);">Log 7 entries in your Nurture Diary to master your mood awareness.</p>
+          </div>
+
+          <div class="roadmap-node" style="position: relative; opacity: 0.5;">
+            <div class="node-circle" style="position: absolute; left: -44px; top: 5px; width: 22px; height: 22px; background: #ddd; border-radius: 50%; border: 4px solid var(--white);"></div>
+            <h4 style="color: var(--text-dark);">The Master Healer</h4>
+            <p style="font-size: 0.9rem; color: var(--text-light);">Achieve full harmony across all wellness disciplines.</p>
+          </div>
         </div>
       </div>
     </main>

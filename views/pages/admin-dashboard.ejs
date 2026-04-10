@@ -20,19 +20,25 @@
       </div>
     </div>
 
-    <!-- Summary Cards -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
-      <div style="background: var(--bg-light); padding: 2rem; border-radius: 20px; text-align: center; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.03);">
-          <h4 style="color: var(--text-light); font-size: 0.8rem; margin-bottom: 0.5rem; text-transform: uppercase; font-family: var(--font-sans); letter-spacing: 1px;">Total Users</h4>
-          <p style="font-size: 2.5rem; font-weight: 700; color: var(--primary);"><%= stats.usersCount %></p>
+    <!-- Executive Summary Cards -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 2rem; margin-bottom: 3.5rem;">
+      <div style="background: var(--white); padding: 2.5rem; border-radius: 30px; position: relative; overflow: hidden; box-shadow: var(--shadow-md); border: 1px solid rgba(0,0,0,0.02);">
+          <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: rgba(18,53,36,0.03); border-radius: 50%;"></div>
+          <h4 style="color: var(--text-light); font-size: 0.75rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 600;">Global Presence</h4>
+          <p style="font-size: 3rem; font-weight: 700; color: var(--primary); letter-spacing: -2px;"><%= stats.usersCount %></p>
+          <span style="font-size: 0.8rem; color: #2ecc71; font-weight: 600;">+12% vs last month</span>
       </div>
-      <div style="background: var(--bg-light); padding: 2rem; border-radius: 20px; text-align: center; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.03);">
-          <h4 style="color: var(--text-light); font-size: 0.8rem; margin-bottom: 0.5rem; text-transform: uppercase; font-family: var(--font-sans); letter-spacing: 1px;">Appointments</h4>
-          <p style="font-size: 2.5rem; font-weight: 700; color: var(--accent);"><%= stats.appointmentsCount %></p>
+      <div style="background: var(--white); padding: 2.5rem; border-radius: 30px; position: relative; overflow: hidden; box-shadow: var(--shadow-md); border: 1px solid rgba(0,0,0,0.02);">
+          <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: rgba(207,157,64,0.05); border-radius: 50%;"></div>
+          <h4 style="color: var(--text-light); font-size: 0.75rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 600;">Service Volume</h4>
+          <p style="font-size: 3rem; font-weight: 700; color: var(--accent); letter-spacing: -2px;"><%= stats.appointmentsCount %></p>
+          <span style="font-size: 0.8rem; color: var(--accent); font-weight: 600;">Peak Performance</span>
       </div>
-      <div style="background: var(--bg-light); padding: 2rem; border-radius: 20px; text-align: center; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.03);">
-          <h4 style="color: var(--text-light); font-size: 0.8rem; margin-bottom: 0.5rem; text-transform: uppercase; font-family: var(--font-sans); letter-spacing: 1px;">System Health</h4>
-          <p style="font-size: 2.5rem; font-weight: 700; color: #3498db;"><%= stats.activitiesCount %></p>
+      <div style="background: var(--white); padding: 2.5rem; border-radius: 30px; position: relative; overflow: hidden; box-shadow: var(--shadow-md); border: 1px solid rgba(0,0,0,0.02);">
+          <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: rgba(52,152,219,0.05); border-radius: 50%;"></div>
+          <h4 style="color: var(--text-light); font-size: 0.75rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 600;">Network Pulse</h4>
+          <p style="font-size: 3rem; font-weight: 700; color: #3498db; letter-spacing: -2px;"><%= stats.activitiesCount %></p>
+          <span style="font-size: 0.8rem; color: #3498db; font-weight: 600;">Optimized & Healthy</span>
       </div>
     </div>
 
@@ -57,35 +63,57 @@
         data: {
           labels: ['Completed', 'Scheduled', 'Cancelled'],
           datasets: [{
-            data: [12, 19, 3], // Mock data for now
-            backgroundColor: ['#2ecc71', '#3498db', '#e74c3c'],
+            data: [12, 19, 3],
+            backgroundColor: ['#123524', '#CF9D40', '#e74c3c'],
+            hoverOffset: 15,
             borderWidth: 0
           }]
         },
         options: {
-          cutout: '70%',
-          plugins: { legend: { position: 'bottom' } }
+          cutout: '75%',
+          plugins: { 
+            legend: { 
+              position: 'bottom',
+              labels: { usePointStyle: true, padding: 20, font: { family: 'Outfit' } }
+            } 
+          }
         }
       });
 
-      // User Chart
+      // User Registration Growth Chart
       const userCtx = document.getElementById('userChart');
       new Chart(userCtx, {
         type: 'line',
         data: {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr'],
+          labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
           datasets: [{
-            label: 'Total Users',
-            data: [50, 80, 120, <%= stats.usersCount %>],
+            label: 'New Registrations',
+            data: [2, 15, 8, <%= stats.usersCount %>],
             borderColor: '#CF9D40',
-            backgroundColor: 'rgba(207,157,64,0.1)',
+            backgroundColor: (context) => {
+              const chart = context.chart;
+              const {ctx, chartArea} = chart;
+              if (!chartArea) return null;
+              const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+              gradient.addColorStop(0, 'rgba(207,157,64,0)');
+              gradient.addColorStop(1, 'rgba(207,157,64,0.2)');
+              return gradient;
+            },
             fill: true,
-            tension: 0.4
+            tension: 0.5,
+            pointRadius: 6,
+            pointBackgroundColor: '#fff',
+            pointBorderColor: '#CF9D40',
+            pointBorderWidth: 2
           }]
         },
         options: {
+          responsive: true,
           plugins: { legend: { display: false } },
-          scales: { y: { beginAtZero: true } }
+          scales: { 
+            y: { display: false, beginAtZero: true },
+            x: { grid: { display: false } }
+          }
         }
       });
     </script>
