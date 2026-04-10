@@ -15,15 +15,7 @@
     rel="stylesheet">
 </head>
 
-<body class="loading-state">
-
-  <!-- Cinematic Transition Overlay -->
-  <div id="page-transition-overlay" class="transition-overlay">
-    <div class="transition-loader">
-      <div class="loader-circle neon-glow"></div>
-      <span class="loader-text">Jeevadhara<span>.</span></span>
-    </div>
-  </div>
+<body>
 
   <!-- Navigation -->
   <nav class="navbar">
@@ -228,30 +220,7 @@
       }
     }
 
-    // Cinematic Page Transitions
-    const overlay = document.getElementById('page-transition-overlay');
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        overlay.classList.add('hide');
-        document.body.classList.remove('loading-state');
-      }, 100);
-    });
 
-    document.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', (e) => {
-        const href = link.href;
-        const isInternal = href.startsWith(window.location.origin) || href.startsWith('/');
-        const isTargetSelf = !link.target || link.target === '_self';
-        
-        if (isInternal && isTargetSelf && !href.includes('#')) {
-          e.preventDefault();
-          overlay.classList.remove('hide');
-          setTimeout(() => {
-            window.location.href = href;
-          }, 200);
-        }
-      });
-    });
 
   </script>
 </body>
