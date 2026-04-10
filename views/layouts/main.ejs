@@ -234,7 +234,7 @@
       setTimeout(() => {
         overlay.classList.add('hide');
         document.body.classList.remove('loading-state');
-      }, 600);
+      }, 100);
     });
 
     document.querySelectorAll('a').forEach(link => {
@@ -248,7 +248,7 @@
           overlay.classList.remove('hide');
           setTimeout(() => {
             window.location.href = href;
-          }, 600);
+          }, 200);
         }
       });
     });
