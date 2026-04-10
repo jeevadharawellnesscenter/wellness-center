@@ -4,6 +4,14 @@
   </div>
 </div>
 
+<style>
+  @media (max-width: 768px) {
+    .blog-featured-layout {
+      grid-template-columns: 1fr !important;
+    }
+  }
+</style>
+
 <section class="page-hero" style="background: linear-gradient(135deg, #123524 0%, #2a5a43 100%); min-height: 30vh; display: flex; align-items: center; justify-content: center; text-align: center; color: white;">
   <div class="container">
     <h1 style="color: white; font-size: clamp(2.5rem, 8vw, 4rem); margin-bottom: 1rem;">Wellness Insights</h1>
@@ -13,13 +21,21 @@
 
 <section class="section">
   <div class="container">
-    <div id="blogs-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 3rem;">
+    <div style="margin-bottom: 2rem; display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap;">
+      <h2 style="font-size: clamp(1.7rem, 3vw, 2.4rem); color: var(--primary);">Featured Insights</h2>
+      <span style="font-size:0.9rem; color:var(--text-light);">Latest articles curated by our wellness team</span>
+    </div>
+    <div id="blogs-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
       <p style="text-align: center; width: 100%; color: var(--text-light);">Gathering our latest insights...</p>
     </div>
   </div>
 </section>
 
 <script>
+  function fallbackImage(el) {
+    el.style.backgroundImage = "linear-gradient(135deg,#f5f8f6,#e8eee9)";
+  }
+
   async function fetchBlogs() {
     try {
       const res = await fetch('/api/blogs');
@@ -27,20 +43,43 @@
       const grid = document.getElementById('blogs-grid');
       
       if (data && data.length > 0) {
-        grid.innerHTML = data.map(blog => `
-          <div class="service-card" style="cursor: pointer;" onclick="window.location.href='/blogs/${blog._id}'">
-            <div class="service-img" style="background-image: url('${blog.image}'); height: 240px;"></div>
-            <div class="service-content" style="padding: 2rem;">
-              <span class="service-cat" style="color: var(--accent); letter-spacing: 2px;">${blog.category}</span>
-              <h3 style="margin: 1rem 0; font-size: 1.6rem; color: var(--primary);">${blog.title}</h3>
-              <p style="font-size: 0.95rem; color: var(--text-light); line-height: 1.7; margin-bottom: 2rem;">${blog.excerpt}</p>
-              <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee; padding-top: 1.2rem;">
-                <span style="font-size: 0.85rem; color: var(--text-light);">${new Date(blog.publishDate).toLocaleDateString()}</span>
-                <span style="font-weight: 600; color: var(--primary); font-size: 0.9rem;">Read More →</span>
+        const featured = data[0];
+        const rest = data.slice(1);
+
+        const featuredCard = `
+          <article class="service-card" style="cursor:pointer; grid-column: 1/-1;" onclick="window.location.href='/blogs/${featured._id}'">
+            <div class="blog-featured-layout" style="display:grid; grid-template-columns: minmax(280px, 1fr) minmax(0, 1fr); gap:0;">
+              <div class="service-img" style="background-image:url('${featured.image || ''}'); min-height:280px;" onerror="fallbackImage(this)"></div>
+              <div class="service-content" style="padding:2rem 2rem 1.6rem;">
+                <span class="service-cat" style="color: var(--accent); letter-spacing: 2px;">${featured.category}</span>
+                <h3 style="margin:0.8rem 0 0.8rem; font-size:2rem; color:var(--primary);">${featured.title}</h3>
+                <p style="font-size:1rem; color:var(--text-light); line-height:1.8; margin-bottom:1.6rem;">${featured.excerpt}</p>
+                <div style="display:flex; gap:0.7rem; flex-wrap:wrap;">
+                  <span style="font-size:0.8rem; padding:0.25rem 0.7rem; border-radius:999px; background:#edf5f0; color:#2d5a44;">Featured</span>
+                  <span style="font-size:0.8rem; padding:0.25rem 0.7rem; border-radius:999px; background:#f6f0df; color:#8b6a28;">${new Date(featured.publishDate).toLocaleDateString()}</span>
+                </div>
+                <div style="margin-top:1.2rem; font-weight:600; color:var(--primary);">Read Full Insight →</div>
               </div>
             </div>
-          </div>
+          </article>
+        `;
+
+        const cards = rest.map(blog => `
+          <article class="service-card" style="cursor:pointer;" onclick="window.location.href='/blogs/${blog._id}'">
+            <div class="service-img" style="background-image:url('${blog.image || ''}'); height:220px;" onerror="fallbackImage(this)"></div>
+            <div class="service-content" style="padding:1.6rem;">
+              <span class="service-cat" style="color: var(--accent); letter-spacing: 2px;">${blog.category}</span>
+              <h3 style="margin: 0.8rem 0; font-size: 1.3rem; color: var(--primary);">${blog.title}</h3>
+              <p style="font-size: 0.92rem; color: var(--text-light); line-height: 1.6; margin-bottom: 1.2rem;">${blog.excerpt}</p>
+              <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #eee; padding-top:0.9rem;">
+                <span style="font-size: 0.82rem; color: var(--text-light);">${new Date(blog.publishDate).toLocaleDateString()}</span>
+                <span style="font-weight: 600; color: var(--primary); font-size: 0.86rem;">Read More →</span>
+              </div>
+            </div>
+          </article>
         `).join('');
+
+        grid.innerHTML = featuredCard + cards;
       } else {
         grid.innerHTML = '<p style="text-align: center; width: 100%;">No articles published yet. Check back soon!</p>';
       }

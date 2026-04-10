@@ -17,21 +17,24 @@
       <button class="btn btn-primary" onclick="showAddModal()">+ Create New Article</button>
     </div>
 
-    <div style="margin-top: 2rem;">
+    <div style="margin-top: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.2rem;">
       <% blogs.forEach(blog => { %>
-        <div style="background: white; padding: 1.5rem; border-radius: 15px; margin-bottom: 1rem; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center;">
-          <div style="display: flex; gap: 1.5rem; align-items: center;">
-            <div style="width: 80px; height: 80px; border-radius: 10px; background: url('<%= blog.image %>') center/cover;"></div>
-            <div>
-              <h4 style="margin-bottom: 0.2rem;"><%= blog.title %></h4>
-              <span style="font-size: 0.8rem; color: var(--accent); text-transform: uppercase;"><%= blog.category %></span>
-              <p style="font-size: 0.9rem; color: var(--text-light); margin-top: 0.3rem;"><%= blog.publishDate.toLocaleDateString() %></p>
+        <article style="background: white; border-radius: 18px; box-shadow: var(--shadow-sm); overflow: hidden; border: 1px solid rgba(0,0,0,0.06);">
+          <div style="height: 170px; background: linear-gradient(120deg, #f5f7f5, #ecf3ef); background-image: url('<%= blog.image %>'); background-size: cover; background-position: center;"></div>
+          <div style="padding: 1rem 1.1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.8rem;">
+              <span style="font-size: 0.74rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;"><%= blog.category %></span>
+              <span style="font-size: 0.76rem; padding: 0.18rem 0.55rem; border-radius: 999px; background: <%= blog.isPublic ? '#e8f7ee' : '#f3f3f3' %>; color: <%= blog.isPublic ? '#16794f' : '#6b7280' %>;"><%= blog.isPublic ? 'Published' : 'Draft' %></span>
+            </div>
+            <h4 style="margin: 0.55rem 0 0.35rem;"><%= blog.title %></h4>
+            <p style="font-size: 0.88rem; color: var(--text-light); min-height: 44px;"><%= blog.excerpt %></p>
+            <p style="font-size: 0.8rem; color: #7c8a83;"><%= blog.publishDate.toLocaleDateString() %></p>
+            <div style="display: flex; gap: 0.65rem; margin-top: 0.8rem;">
+              <button class="btn btn-outline" style="padding: 0.55rem 0.9rem; font-size: 0.82rem;" onclick='openEditModal(<%- JSON.stringify(blog).replace(/'/g, "\\'") %>)'>Edit</button>
+              <button class="btn btn-outline" style="padding: 0.55rem 0.9rem; font-size: 0.82rem; border-color:#e74c3c; color:#e74c3c;" onclick="deleteBlog('<%= blog._id %>')">Delete</button>
             </div>
           </div>
-          <div style="display: flex; gap: 1rem;">
-            <button onclick="deleteBlog('<%= blog._id %>')" style="color: #e74c3c; background: none; border: none; cursor: pointer;">Delete</button>
-          </div>
-        </div>
+        </article>
       <% }) %>
     </div>
   </main>
@@ -40,15 +43,16 @@
 <!-- Add Blog Modal -->
 <div id="blogModal" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
   <div style="background:white; padding:2.5rem; border-radius:20px; width:95%; max-width:800px; height: 90vh; overflow-y: auto;">
-    <h3>Create New Wellness Article</h3>
+    <h3 id="blogModalTitle">Create New Wellness Article</h3>
     <form id="blogForm" onsubmit="handleBlogSubmit(event)" style="margin-top: 1.5rem;">
+      <input type="hidden" name="blogId" id="blogId">
       <div class="form-group">
         <label>Article Title</label>
-        <input type="text" name="title" class="form-control" required placeholder="e.g. The Healing Power of Mud">
+        <input type="text" name="title" id="title" class="form-control" required placeholder="e.g. The Healing Power of Mud">
       </div>
       <div class="form-group">
         <label>Category</label>
-        <select name="category" class="form-control" required>
+        <select name="category" id="category" class="form-control" required>
           <option value="Naturopathy">Naturopathy</option>
           <option value="Diet">Diet</option>
           <option value="Lifestyle">Lifestyle</option>
@@ -58,19 +62,29 @@
       </div>
       <div class="form-group">
         <label>Short Excerpt</label>
-        <input type="text" name="excerpt" class="form-control" required placeholder="A brief summary for the card...">
+        <input type="text" name="excerpt" id="excerpt" class="form-control" required placeholder="A brief summary for the card...">
       </div>
       <div class="form-group">
         <label>Full Content (HTML allowed)</label>
-        <textarea name="content" class="form-control" required rows="10" placeholder="Write your premium health content here..."></textarea>
+        <textarea name="content" id="content" class="form-control" required rows="10" placeholder="Write your premium health content here..."></textarea>
       </div>
       <div class="form-group">
         <label>Image URL</label>
-        <input type="text" name="image" class="form-control" placeholder="Unsplash URL">
+        <input type="text" name="image" id="image" class="form-control" placeholder="Image URL or upload below">
+      </div>
+      <div class="form-group">
+        <label>Upload Image (JPG/PNG/WEBP)</label>
+        <input type="file" id="imageFile" class="form-control" accept="image/*">
+      </div>
+      <div class="form-group">
+        <label style="display:flex;align-items:center;gap:0.5rem;">
+          <input type="checkbox" id="isPublic" checked>
+          Publish this article publicly
+        </label>
       </div>
       <div style="display: flex; gap: 1rem; margin-top: 2rem;">
         <button type="button" class="btn btn-outline" style="flex: 1;" onclick="closeModal()">Cancel</button>
-        <button type="submit" class="btn btn-primary" style="flex: 1;">Publish Insights</button>
+        <button type="submit" class="btn btn-primary" id="submitBtn" style="flex: 1;">Publish Insights</button>
       </div>
     </form>
   </div>
@@ -78,31 +92,87 @@
 
 <script>
   function showAddModal() {
+    resetForm();
     document.getElementById('blogModal').style.display = 'flex';
   }
   function closeModal() {
     document.getElementById('blogModal').style.display = 'none';
   }
+
+  function resetForm() {
+    document.getElementById('blogForm').reset();
+    document.getElementById('blogId').value = '';
+    document.getElementById('isPublic').checked = true;
+    document.getElementById('blogModalTitle').textContent = 'Create New Wellness Article';
+    document.getElementById('submitBtn').textContent = 'Publish Insights';
+  }
+
+  function openEditModal(blog) {
+    document.getElementById('blogModal').style.display = 'flex';
+    document.getElementById('blogId').value = blog._id || '';
+    document.getElementById('title').value = blog.title || '';
+    document.getElementById('category').value = blog.category || 'Lifestyle';
+    document.getElementById('excerpt').value = blog.excerpt || '';
+    document.getElementById('content').value = blog.content || '';
+    document.getElementById('image').value = blog.image || '';
+    document.getElementById('isPublic').checked = Boolean(blog.isPublic);
+    document.getElementById('blogModalTitle').textContent = 'Edit Wellness Article';
+    document.getElementById('submitBtn').textContent = 'Save Changes';
+  }
+
+  async function uploadImageIfAny() {
+    const imageFileInput = document.getElementById('imageFile');
+    if (!imageFileInput.files || imageFileInput.files.length === 0) {
+      return null;
+    }
+
+    const fileForm = new FormData();
+    fileForm.append('image', imageFileInput.files[0]);
+    const uploadRes = await fetch('/api/blogs/upload-image', {
+      method: 'POST',
+      body: fileForm
+    });
+
+    if (!uploadRes.ok) {
+      const err = await uploadRes.json();
+      throw new Error(err.message || 'Image upload failed');
+    }
+
+    const uploadData = await uploadRes.json();
+    return uploadData.imageUrl;
+  }
+
   async function handleBlogSubmit(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
+    data.isPublic = document.getElementById('isPublic').checked;
     
     try {
-      const res = await fetch('/api/blogs', {
-        method: 'POST',
+      const uploadedImage = await uploadImageIfAny();
+      if (uploadedImage) {
+        data.image = uploadedImage;
+      }
+
+      const blogId = data.blogId;
+      delete data.blogId;
+
+      const isEdit = Boolean(blogId);
+      const res = await fetch(isEdit ? `/api/blogs/${blogId}` : '/api/blogs', {
+        method: isEdit ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
       if(res.ok) {
-        alert('Article published successfully');
+        alert(isEdit ? 'Article updated successfully' : 'Article published successfully');
         window.location.reload();
       } else {
-        alert('Failed to publish article');
+        const err = await res.json();
+        alert(err.message || 'Failed to save article');
       }
     } catch(err) {
       console.error(err);
-      alert('Error saving blog');
+      alert(err.message || 'Error saving blog');
     }
   }
   async function deleteBlog(id) {

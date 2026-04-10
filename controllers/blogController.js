@@ -85,3 +85,19 @@ export const deleteBlog = async (req, res) => {
     res.status(400).json({ success: false, message: error.message });
   }
 };
+
+// @desc    Upload blog image
+// @route   POST /api/blogs/upload-image
+// @access  Private/Admin
+export const uploadBlogImage = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'No image file uploaded' });
+    }
+
+    const imageUrl = `/uploads/blogs/${req.file.filename}`;
+    res.status(201).json({ success: true, imageUrl });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
