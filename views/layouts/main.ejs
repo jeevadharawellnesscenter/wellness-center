@@ -191,6 +191,20 @@
       transform: translateX(5px);
       box-shadow: var(--shadow-sm);
     }
+
+    @media (max-width: 768px) {
+      /* Avoid overlap with WhatsApp floating button on mobile */
+      #zen-hub-trigger {
+        right: 20px;
+        bottom: 120px;
+      }
+      #zen-hub-panel {
+        right: 16px;
+        left: 16px;
+        width: auto;
+        bottom: 190px;
+      }
+    }
   </style>
 
   <script>
