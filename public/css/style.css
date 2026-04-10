@@ -105,7 +105,7 @@ ul { list-style: none; }
   background: var(--glass-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  position: sticky; top: 0; z-index: 3000;
+  position: sticky; top: 0; z-index: 5000;
   border-bottom: 1px solid var(--glass-border);
   transition: var(--transition);
 }
@@ -355,19 +355,25 @@ main { min-height: 80vh; }
 @media (max-width: 768px) {
   .hamburger { display: flex; }
   .nav-links {
-    display: flex; flex-direction: column; position: fixed; top: 0; right: -100%;
-    background: rgba(10, 28, 19, 0.98); backdrop-filter: blur(30px);
-    width: 100vw; height: 100vh; overflow-y: auto; 
-    box-shadow: none; opacity: 1; visibility: visible; 
-    transform: none; padding: 6rem 0; border: none;
-    transition: right 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-    z-index: 2000;
+    display: none; /* Controlled by display: flex when .show is added */
+    flex-direction: column; position: absolute; 
+    top: 100%; left: 0; width: 100%;
+    background: rgba(10, 28, 19, 0.98); 
+    backdrop-filter: blur(30px);
+    overflow: hidden; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+    padding: 2rem 0; border: none;
+    z-index: 4000;
+    transition: all 0.4s ease;
   }
-  .nav-links.show { right: 0; }
-  .nav-links li { width: 100%; text-align: center; margin: 15px 0; }
-  .nav-links li a { font-size: 1.5rem; color: #ffffff !important; }
-  .nav-links .btn { display: inline-flex; width: auto; margin: 10px auto; }
-  .nav-links .btn { display: inline-block; }
+  .nav-links.show { display: flex; animation: slideDownNav 0.4s ease forwards; }
+  @keyframes slideDownNav {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .nav-links li { width: 100%; text-align: center; margin: 12px 0; }
+  .nav-links li a { font-size: 1.25rem; color: #ffffff !important; font-weight: 500; }
+  .nav-links .btn { display: inline-flex; width: auto; min-width: 200px; margin: 10px auto; }
   .dropdown-content { position: static; box-shadow: none; border: none; display: none; background: transparent; transform: none; }
   .dropdown:hover .dropdown-content { display: block; }
   .footer-content { flex-direction: column; gap: 3rem; }
