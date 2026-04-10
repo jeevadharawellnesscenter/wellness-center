@@ -192,6 +192,20 @@
       box-shadow: var(--shadow-sm);
     }
 
+    @media (min-width: 769px) {
+      /* Keep desktop floating controls away from hero/trust content */
+      #zen-hub-trigger {
+        left: 24px;
+        right: auto;
+        bottom: 24px;
+      }
+      #zen-hub-panel {
+        left: 24px;
+        right: auto;
+        bottom: 96px;
+      }
+    }
+
     @media (max-width: 768px) {
       /* Avoid overlap with WhatsApp floating button on mobile */
       #zen-hub-trigger {
