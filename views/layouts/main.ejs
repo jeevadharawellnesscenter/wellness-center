@@ -202,6 +202,7 @@
       hamburger.addEventListener('click', () => {
         hamburger.classList.toggle('active');
         navLinks.classList.toggle('show');
+        document.body.style.overflow = navLinks.classList.contains('show') ? 'hidden' : '';
       });
 
       const servicesDropdown = navLinks.querySelector('.dropdown');
@@ -224,6 +225,7 @@
           }
           hamburger.classList.remove('active');
           navLinks.classList.remove('show');
+          document.body.style.overflow = '';
           if (servicesDropdown) {
             servicesDropdown.classList.remove('open');
           }

@@ -375,16 +375,19 @@ main { min-height: 80vh; }
     backdrop-filter: blur(30px);
     overflow: visible; 
     box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-    padding: 2.5rem 0; border: none;
+    padding: 1.5rem 0 2.8rem; border: none;
     z-index: 9999; /* ABOVE EVERYTHING */
     transition: all 0.4s ease;
+    max-height: calc(100vh - 84px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .nav-links.show { display: flex; animation: slideDownNav 0.4s ease forwards; }
   @keyframes slideDownNav {
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  .nav-links li { width: 100%; text-align: center; margin: 15px 0; }
+  .nav-links li { width: 100%; text-align: center; margin: 10px 0; }
   .nav-links li a { font-size: 1.4rem; color: #ffffff !important; font-weight: 500; }
   .nav-links .dropdown {
     width: 100%;
@@ -412,7 +415,7 @@ main { min-height: 80vh; }
     font-size: 1.15rem;
     padding: 0.9rem 1.2rem;
   }
-  .nav-links .btn { display: inline-flex; width: auto; min-width: 200px; margin: 10px auto; }
+  .nav-links .btn { display: inline-flex; width: auto; min-width: 200px; margin: 8px auto; }
   
   .hero h1 { font-size: 2.8rem !important; word-wrap: break-word; overflow-wrap: break-word; }
   .section { padding: 4rem 0; }
