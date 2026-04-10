@@ -104,6 +104,10 @@ app.get('/blogs/:id', (req, res) => res.render('pages/blog-detail', { title: 'Bl
 app.get('/workshops', (req, res) => res.render('pages/workshops', { title: 'Wellness Workshops' }));
 app.get('/diary', protect, (req, res) => res.render('pages/diary', { title: 'My Wellness Diary', user: req.user }));
 app.get('/zen-zone', (req, res) => res.render('pages/zen-zone', { title: 'Zen Zone' }));
+app.get('/zen-zone/hydrotherapy', (req, res) => res.render('pages/resources/hydrotherapy', { title: 'Hydrotherapy Guide' }));
+app.get('/zen-zone/mud-therapy', (req, res) => res.render('pages/resources/mud-therapy', { title: 'Mud Therapy Guide' }));
+app.get('/zen-zone/meditation', (req, res) => res.render('pages/resources/meditation', { title: 'Meditation Guide' }));
+app.get('/zen-zone/nutrition', (req, res) => res.render('pages/resources/nutrition', { title: 'Naturopathic Nutrition' }));
 app.get('/health', (req, res) => res.status(200).json({ success: true, status: 'ok' }));
 
 // 404 handler for unknown API endpoints
