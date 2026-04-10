@@ -5,12 +5,11 @@
   }
   .hero-premium {
     position: relative;
-    height: 90vh; 
-    min-height: 700px;
+    min-height: 92vh;
     display: flex;
     align-items: center;
     background: url('/images/luxury-hero.png') center/cover;
-    padding-top: 80px; 
+    padding: 7.5rem 0 5rem;
     overflow: hidden;
   }
   .hero-premium::before {
@@ -27,7 +26,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.2) 45%, rgba(0, 0, 0, 0.08) 100%);
+    background: linear-gradient(105deg, rgba(4, 14, 10, 0.58) 0%, rgba(7, 24, 16, 0.4) 46%, rgba(6, 18, 13, 0.18) 100%);
     z-index: 2;
     pointer-events: none;
   }
@@ -40,14 +39,24 @@
     from { transform: scale(1) translate(0, 0); }
     to { transform: scale(1.1) translate(5%, 5%); }
   }
+  .hero-grid {
+    position: relative;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.85fr);
+    gap: 2rem;
+    align-items: end;
+  }
   .hero-content {
     position: relative;
     z-index: 10;
-    max-width: 700px;
-    background: rgba(0, 0, 0, 0.22);
-    backdrop-filter: blur(2px);
-    border-radius: 24px;
-    padding: 1.6rem 1.6rem 1.8rem;
+    max-width: 780px;
+    background: rgba(5, 20, 13, 0.44);
+    backdrop-filter: blur(7px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 20px 55px rgba(0, 0, 0, 0.32);
+    border-radius: 28px;
+    padding: 2rem 2rem 2.2rem;
   }
   .hero-badge {
     display: inline-block;
@@ -55,7 +64,7 @@
     background: rgba(255,255,255,0.1);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255,255,255,0.2);
-    color: var(--accent);
+    color: #f4c97d;
     border-radius: 30px;
     font-size: 0.9rem;
     font-weight: 600;
@@ -65,13 +74,13 @@
     animation: fadeUp 1s ease-out forwards;
   }
   .hero-title {
-    font-size: clamp(3.5rem, 8vw, 6rem);
+    font-size: clamp(3rem, 7vw, 5.5rem);
     font-family: var(--font-serif);
     color: #ffffff !important;
     line-height: 1.05;
     margin-bottom: 2rem;
     font-weight: 700;
-    text-shadow: 0 4px 20px rgba(0,0,0,0.55);
+    text-shadow: 0 8px 26px rgba(0,0,0,0.45);
     opacity: 0;
     transform: translateY(30px);
     animation: fadeUp 1s ease-out 0.2s forwards;
@@ -79,10 +88,10 @@
     z-index: 10;
   }
   .hero-subtitle {
-    font-size: 1.35rem;
-    color: #ffffff !important;
-    line-height: 1.8;
-    margin-bottom: 3.5rem;
+    font-size: 1.2rem;
+    color: #f6faf8 !important;
+    line-height: 1.75;
+    margin-bottom: 2.2rem;
     font-weight: 600;
     text-shadow: 0 2px 10px rgba(0,0,0,0.45);
     opacity: 0;
@@ -105,6 +114,61 @@
     color: #ffffff !important;
     font-weight: 700;
     letter-spacing: 0.2px;
+    min-width: 220px;
+  }
+  .hero-btn-primary {
+    background: linear-gradient(135deg, #1f7a52 0%, #0f5b3a 100%);
+    border-color: transparent;
+    box-shadow: 0 12px 30px rgba(16, 125, 78, 0.45) !important;
+  }
+  .hero-btn-outline {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+  }
+  .hero-meta {
+    display: flex;
+    gap: 1.1rem;
+    flex-wrap: wrap;
+    margin-top: 0.4rem;
+  }
+  .hero-chip {
+    padding: 0.45rem 0.95rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 0.85rem;
+    color: #eaf8f1;
+    font-weight: 500;
+  }
+  .hero-sidecard {
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 22px;
+    padding: 1.4rem;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    max-width: 360px;
+    justify-self: end;
+  }
+  .hero-sidecard h3 {
+    font-family: var(--font-serif);
+    color: var(--primary-dark);
+    margin-bottom: 0.85rem;
+    font-size: 1.3rem;
+  }
+  .hero-sidecard p {
+    color: #3b4c45;
+    margin-bottom: 1rem;
+    font-size: 0.96rem;
+    line-height: 1.6;
+  }
+  .hero-sidecard ul {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .hero-sidecard li {
+    color: var(--primary-dark);
+    font-size: 0.9rem;
+    font-weight: 600;
   }
 
   @keyframes fadeUp {
@@ -263,15 +327,24 @@
       padding: 120px 0 60px;
       background-attachment: scroll; /* Better for mobile performance */
     }
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: 1.2rem;
+    }
+    .hero-sidecard {
+      max-width: 100%;
+      justify-self: start;
+      background: rgba(255, 255, 255, 0.95);
+    }
     .hero-title { font-size: 2.8rem; word-break: break-word; }
     .hero-badge { margin-bottom: 1.5rem; }
     .hero-subtitle { font-size: 1.1rem; margin-bottom: 2rem; }
-    .hero-content { padding: 1.2rem; }
+    .hero-content { padding: 1.3rem; }
   }
   @media (max-width: 480px) {
     .hero-title { font-size: 2.2rem; }
     .hero-buttons { flex-direction: column; width: 100%; }
-    .hero-buttons .btn { width: 100%; text-align: center; justify-content: center; }
+    .hero-buttons .btn { width: 100%; text-align: center; justify-content: center; min-width: 0; }
   }
 
   @media (max-width: 600px) {
@@ -284,16 +357,32 @@
 <!-- ULTRA PREMIUM HERO SECTION -->
 <section class="hero-premium">
   <div class="container">
-    <div class="hero-content">
-      <span class="hero-badge">Welcome to Jeevadhara</span>
-      <h1 class="hero-title">Awaken Your<br>Inner Harmony</h1>
-      <p class="hero-subtitle">
-        Embark on a transformative journey of holistic wellness. We blend ancient Naturopathic wisdom with modern luxury to rejuvenate your mind, body, and spirit.
-      </p>
-      <div class="hero-buttons">
-        <a href="/services" class="btn btn-primary" style="padding: 1rem 2.5rem; border-radius: 30px; font-size: 1.1rem; box-shadow: 0 10px 20px rgba(22, 101, 52, 0.4); color: #ffffff !important;">Discover Therapies</a>
-        <a href="/about" class="btn btn-outline" style="padding: 1rem 2.5rem; border-radius: 30px; font-size: 1.1rem; border-color: rgba(255,255,255,0.7); color: #ffffff !important;">Our Journey</a>
+    <div class="hero-grid">
+      <div class="hero-content">
+        <span class="hero-badge">Welcome to Jeevadhara</span>
+        <h1 class="hero-title">Awaken Your<br>Inner Harmony</h1>
+        <p class="hero-subtitle">
+          Embark on a transformative journey of holistic wellness. We blend ancient Naturopathic wisdom with modern luxury to rejuvenate your mind, body, and spirit.
+        </p>
+        <div class="hero-buttons">
+          <a href="/services" class="btn btn-primary hero-btn-primary">Discover Therapies</a>
+          <a href="/about" class="btn btn-outline hero-btn-outline">Our Journey</a>
+        </div>
+        <div class="hero-meta">
+          <span class="hero-chip">100% Natural Protocols</span>
+          <span class="hero-chip">Expert Healing Team</span>
+          <span class="hero-chip">Personalized Care Plans</span>
+        </div>
       </div>
+      <aside class="hero-sidecard">
+        <h3>Your Wellness Blueprint</h3>
+        <p>Choose a complete path designed for energy, pain relief, and deep relaxation.</p>
+        <ul>
+          <li>+ Body & Mind Rebalancing</li>
+          <li>+ Naturopathy & Therapeutic Yoga</li>
+          <li>+ Guided Nutrition and Detox</li>
+        </ul>
+      </aside>
     </div>
   </div>
 </section>
