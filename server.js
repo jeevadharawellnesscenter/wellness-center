@@ -74,7 +74,6 @@ import blogRoutes from './routes/blogRoutes.js';
 import practitionerRoutes from './routes/practitionerRoutes.js';
 import newsletterRoutes from './routes/newsletterRoutes.js';
 import diaryRoutes from './routes/diaryRoutes.js';
-import aiRoutes from './routes/aiRoutes.js';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
@@ -85,7 +84,6 @@ app.use('/api/blogs', blogRoutes);
 app.use('/api/practitioners', practitionerRoutes);
 app.use('/api/newsletter', newsletterRoutes);
 app.use('/api/diary', diaryRoutes);
-app.use('/api/ai', aiRoutes);
 app.use('/admin', adminRoutes);
 
 // View Routes Setup
@@ -105,7 +103,7 @@ app.get('/blogs', (req, res) => res.render('pages/blogs', { title: 'Wellness Ins
 app.get('/blogs/:id', (req, res) => res.render('pages/blog-detail', { title: 'Blog Details' }));
 app.get('/workshops', (req, res) => res.render('pages/workshops', { title: 'Wellness Workshops' }));
 app.get('/diary', protect, (req, res) => res.render('pages/diary', { title: 'My Wellness Diary', user: req.user }));
-app.get('/advisor', (req, res) => res.render('pages/advisor', { title: 'AI Wellness Advisor' }));
+app.get('/zen-zone', (req, res) => res.render('pages/zen-zone', { title: 'Zen Zone' }));
 app.get('/health', (req, res) => res.status(200).json({ success: true, status: 'ok' }));
 
 // 404 handler for unknown API endpoints

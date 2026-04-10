@@ -1,0 +1,300 @@
+<style>
+  .zen-hero {
+    background: linear-gradient(135deg, #0f1c14 0%, #1e3f2b 100%);
+    padding: 8rem 0 4rem;
+    text-align: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .zen-hero::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(74, 222, 128, 0.1) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .breathing-room {
+    padding: 6rem 0;
+    background: #fdfdfd;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .breathing-circle-container {
+    width: 300px;
+    height: 300px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 3rem 0;
+  }
+
+  .breathing-circle {
+    width: 150px;
+    height: 150px;
+    background: var(--primary);
+    border-radius: 50%;
+    opacity: 0.6;
+    transition: transform 4s ease-in-out;
+    box-shadow: 0 0 50px rgba(22, 101, 52, 0.3);
+  }
+
+  .breathing-circle.inhale {
+    transform: scale(2);
+  }
+
+  .breathing-circle.exhale {
+    transform: scale(1);
+  }
+
+  .breathing-instruction {
+    font-size: 1.5rem;
+    font-family: var(--font-serif);
+    color: var(--primary-dark);
+    margin-top: 1rem;
+    min-height: 2rem;
+  }
+
+  .resource-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2.5rem;
+    margin-top: 4rem;
+  }
+
+  .resource-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.02);
+  }
+
+  .resource-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  }
+
+  .resource-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+
+  .resource-content {
+    padding: 2rem;
+  }
+
+  .resource-tag {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .resource-title {
+    font-size: 1.25rem;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    font-family: var(--font-serif);
+  }
+
+  .resource-desc {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .btn-zen {
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    padding: 0.6rem 1.5rem;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+  }
+
+  .btn-zen:hover {
+    background: var(--primary);
+    color: white;
+  }
+
+  .timer-display {
+    font-size: 3rem;
+    font-family: var(--font-serif);
+    color: var(--primary);
+    margin-bottom: 1rem;
+  }
+</style>
+
+<section class="zen-hero">
+  <div class="container">
+    <h1 style="font-size: clamp(3rem, 8vw, 5rem); font-family: var(--font-serif); margin-bottom: 1.5rem;">The Zen Zone</h1>
+    <p style="font-size: 1.2rem; color: rgba(255,255,255,0.8); max-width: 700px; margin: 0 auto; line-height: 1.8;">
+      Welcome to your sanctuary of stillness. Regulate your energy, restore your focus, and explore the wisdom of natural healing.
+    </p>
+  </div>
+</section>
+
+<section class="breathing-room">
+  <div class="container">
+    <div style="max-width: 600px; margin: 0 auto 3rem;">
+      <span style="color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem;">Mindfulness Practice</span>
+      <h2 style="font-family: var(--font-serif); color: var(--primary-dark); margin: 1rem 0;">Regulate Your Breath</h2>
+      <p style="color: var(--text-light); line-height: 1.6;">Use this interactive guide to practice the 4-7-8 breathing technique, a natural tranquilizer for the nervous system.</p>
+    </div>
+
+    <div id="zen-timer" class="timer-display">00:00</div>
+
+    <div class="breathing-circle-container">
+      <div id="breathing-circle" class="breathing-circle"></div>
+      <div id="instruction-text" style="position: absolute; width: 100%; text-align: center; color: white; font-weight: 600; pointer-events: none;">Ready?</div>
+    </div>
+
+    <div class="breathing-instruction" id="breathing-detail">Press Start to begin your session.</div>
+
+    <div style="margin-top: 3rem; display: flex; gap: 1rem; justify-content: center;">
+      <button id="start-breath" class="btn btn-primary" style="padding: 1rem 2.5rem; border-radius: 30px;">Start Session</button>
+      <button id="stop-breath" class="btn btn-outline" style="padding: 1rem 2.5rem; border-radius: 30px; display: none;">Stop</button>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background: white; padding-bottom: 8rem;">
+  <div class="container">
+    <div style="text-align: center; margin-bottom: 4rem;">
+      <h2 style="font-family: var(--font-serif); color: var(--primary-dark); font-size: 2.5rem;">Wellness Library</h2>
+      <p style="color: var(--text-light); max-width: 600px; margin: 1rem auto;">Curated resources to deepen your understanding of holistic health.</p>
+    </div>
+
+    <div class="resource-grid">
+      <!-- Card 1 -->
+      <div class="resource-card">
+        <img src="/img/hydrotherapy.png" alt="Hydrotherapy" class="resource-img">
+        <div class="resource-content">
+          <span class="resource-tag">Hydrotherapy</span>
+          <h3 class="resource-title">The Power of Water</h3>
+          <p class="resource-desc">Discover how varying water temperatures can stimulate blood flow and enhance your body's natural defense mechanisms.</p>
+          <a href="#" class="btn-zen">Read Guide</a>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="resource-card">
+        <img src="/img/mud_therapy.png" alt="Mud Therapy" class="resource-img">
+        <div class="resource-content">
+          <span class="resource-tag">Detox</span>
+          <h3 class="resource-title">Earth's Healing Touch</h3>
+          <p class="resource-desc">Explore the ancient practice of mud therapy for skin rejuvenation and deep toxin removal from the systemic layers.</p>
+          <a href="#" class="btn-zen">Explore More</a>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="resource-card">
+        <img src="/img/meditation.png" alt="Meditation" class="resource-img">
+        <div class="resource-content">
+          <span class="resource-tag">Mindfulness</span>
+          <h3 class="resource-title">Inner Stillness</h3>
+          <p class="resource-desc">A beginner's guide to Vipassana and Zen meditation techniques for mental clarity and emotional resilience.</p>
+          <a href="#" class="btn-zen">Start Learning</a>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="resource-card">
+        <img src="/img/diet.png" alt="Nutrition" class="resource-img">
+        <div class="resource-content">
+          <span class="resource-tag">Nutrition</span>
+          <h3 class="resource-title">Nature's Harvest</h3>
+          <p class="resource-desc">How to align your diet with the seasons using whole-food, plant-based principles for optimal vitality.</p>
+          <a href="#" class="btn-zen">View Recipes</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  let breathingInterval;
+  let timerInterval;
+  let seconds = 0;
+  
+  const circle = document.getElementById('breathing-circle');
+  const instruction = document.getElementById('instruction-text');
+  const detail = document.getElementById('breathing-detail');
+  const timerDisplay = document.getElementById('zen-timer');
+  const startBtn = document.getElementById('start-breath');
+  const stopBtn = document.getElementById('stop-breath');
+
+  function updateTimer() {
+    seconds++;
+    const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const secs = (seconds % 60).toString().padStart(2, '0');
+    timerDisplay.textContent = `${mins}:${secs}`;
+  }
+
+  function startBreathing() {
+    seconds = 0;
+    timerDisplay.textContent = "00:00";
+    startBtn.style.display = 'none';
+    stopBtn.style.display = 'inline-block';
+    
+    timerInterval = setInterval(updateTimer, 1000);
+    
+    const runCycle = () => {
+      // Inhale (4 seconds)
+      circle.style.transition = 'transform 4s ease-in-out';
+      circle.classList.add('inhale');
+      instruction.textContent = "Inhale";
+      detail.textContent = "Breathe in slowly through your nose...";
+      
+      setTimeout(() => {
+        // Hold (7 seconds)
+        instruction.textContent = "Hold";
+        detail.textContent = "Gently pause and hold your breath...";
+        
+        setTimeout(() => {
+          // Exhale (8 seconds)
+          circle.style.transition = 'transform 8s ease-in-out';
+          circle.classList.remove('inhale');
+          instruction.textContent = "Exhale";
+          detail.textContent = "Release through your mouth with a whoosh sound...";
+        }, 7000);
+      }, 4000);
+    };
+
+    runCycle();
+    breathingInterval = setInterval(runCycle, 19000); // 4 + 7 + 8 = 19 seconds
+  }
+
+  function stopBreathing() {
+    clearInterval(breathingInterval);
+    clearInterval(timerInterval);
+    circle.classList.remove('inhale');
+    instruction.textContent = "Ready?";
+    detail.textContent = "Session complete. You look more peaceful already.";
+    startBtn.style.display = 'inline-block';
+    stopBtn.style.display = 'none';
+    startBtn.textContent = 'Restart Session';
+  }
+
+  startBtn.addEventListener('click', startBreathing);
+  stopBtn.addEventListener('click', stopBreathing);
+</script>

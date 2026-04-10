@@ -48,7 +48,7 @@
           </div>
         </li>
         <li><a href="/blogs" class="<%= currentPath === '/blogs' ? 'active' : '' %>">Insights</a></li>
-        <li><a href="/advisor" class="<%= currentPath === '/advisor' ? 'active' : '' %>">AI Advisor</a></li>
+        <li><a href="/zen-zone" class="<%= currentPath === '/zen-zone' ? 'active' : '' %>">Zen Zone</a></li>
         <li><a href="/contact" class="<%= currentPath === '/contact' ? 'active' : '' %>">Contact</a></li>
 
         <% if(user) { %>
@@ -173,17 +173,17 @@
       en: {
         home: "Home", about: "About", services: "Services ▾", contact: "Contact", 
         login: "Login", signup: "Sign Up", logout: "Logout", dashboard: "Dashboard",
-        zen: "ZEN MODE", solar: "SOLAR MODE"
+        zen: "ZEN MODE", solar: "SOLAR MODE", zenZone: "Zen Zone"
       },
       ta: {
         home: "முகப்பு", about: "எம்மைப் பற்றி", services: "சேவைகள் ▾", contact: "தொடர்பு", 
         login: "உள்நுழை", signup: "பதிவு", logout: "வெளியேறு", dashboard: "டாஷ்போர்டு",
-        zen: "ஜென் நிலை", solar: "ஒளி நிலை"
+        zen: "ஜென் நிலை", solar: "ஒளி நிலை", zenZone: "ஜென் மண்டலம்"
       },
       hi: {
         home: "होम", about: "हमारे बारे में", services: "सेवाएं ▾", contact: "संपर्क", 
         login: "लॉगिन", signup: "साइन अप", logout: "लॉगआउट", dashboard: "डैशबोर्ड",
-        zen: "ज़ेन मोड", solar: "सौर मोड"
+        zen: "ज़ेन मोड", solar: "सौर मोड", zenZone: "ज़ेन ज़ोन"
       }
     };
 
@@ -201,6 +201,7 @@
         if (text.includes('sign up')) link.textContent = t.signup;
         if (text.includes('logout')) link.textContent = t.logout;
         if (text.includes('dashboard')) link.textContent = t.dashboard;
+        if (text.includes('zen zone')) link.textContent = t.zenZone;
       });
       const zenBtn = document.getElementById('zenToggle');
       if(zenBtn) {
