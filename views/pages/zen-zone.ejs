@@ -26,34 +26,18 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-  }
-
-  .breathing-circle-container {
-    width: 300px;
-    height: 300px;
     position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 3rem 0;
+    overflow: hidden;
   }
 
-  .breathing-circle {
-    width: 150px;
-    height: 150px;
-    background: var(--primary);
-    border-radius: 50%;
-    opacity: 0.6;
-    transition: transform 4s ease-in-out;
-    box-shadow: 0 0 50px rgba(22, 101, 52, 0.3);
-  }
-
-  .breathing-circle.inhale {
-    transform: scale(2);
-  }
-
-  .breathing-circle.exhale {
-    transform: scale(1);
+  /* Three.js Container */
+  #three-canvas-container {
+    width: 100%;
+    height: 500px;
+    position: relative;
+    cursor: grab;
+    margin: 2rem 0;
+    z-index: 5;
   }
 
   .breathing-instruction {
@@ -62,7 +46,26 @@
     color: var(--primary-dark);
     margin-top: 1rem;
     min-height: 2rem;
+    position: relative;
+    z-index: 10;
   }
+
+  /* Overlay text for the 3D object */
+  #three-overlay-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: 700;
+    font-size: 1.5rem;
+    pointer-events: none;
+    text-shadow: 0 0 20px rgba(0,0,0,0.5);
+    z-index: 15;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
 
   .resource-grid {
     display: grid;
@@ -143,7 +146,8 @@
   }
 </style>
 
-<section class="zen-hero">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<section class="zen-hero" style="color: white; color: white !important;">
   <div class="container">
     <h1 style="font-size: clamp(3rem, 8vw, 5rem); font-family: var(--font-serif); margin-bottom: 1.5rem; color: white;">The Zen Zone</h1>
     <p style="font-size: 1.2rem; color: rgba(255,255,255,0.8); max-width: 700px; margin: 0 auto; line-height: 1.8;">
@@ -162,12 +166,11 @@
 
     <div id="zen-timer" class="timer-display">00:00</div>
 
-    <div class="breathing-circle-container">
-      <div id="breathing-circle" class="breathing-circle"></div>
-      <div id="instruction-text" style="position: absolute; width: 100%; text-align: center; color: white; font-weight: 600; pointer-events: none;">Ready?</div>
+    <div id="three-canvas-container">
+      <div id="three-overlay-text">Ready?</div>
     </div>
 
-    <div class="breathing-instruction" id="breathing-detail">Press Start to begin your session.</div>
+    <div class="breathing-instruction" id="breathing-detail">Press Start to begin your immersive 3D session.</div>
 
     <div style="margin-top: 3rem; display: flex; gap: 1rem; justify-content: center;">
       <button id="start-breath" class="btn btn-primary" style="padding: 1rem 2.5rem; border-radius: 30px;">Start Session</button>
@@ -232,12 +235,121 @@
 </section>
 
 <script>
+  // THREE.JS IMPLEMENTATION
+  const container = document.getElementById('three-canvas-container');
+  const overlayText = document.getElementById('three-overlay-text');
+  
+  let scene, camera, renderer, sphere, clouds;
+  let isBreathing = false;
+  let breathingState = 'ready'; // ready, inhale, hold, exhale
+  let clock = new THREE.Clock();
+
+  function initThree() {
+    scene = new THREE.Scene();
+    
+    camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+    camera.position.z = 5;
+
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
+
+    // Lights
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+
+    const pointLight = new THREE.PointLight(0x4ade80, 2, 50);
+    pointLight.position.set(5, 5, 5);
+    scene.add(pointLight);
+
+    // The Zen Sphere (Crystalline Icosahedron)
+    const geometry = new THREE.IcosahedronGeometry(1.5, 4);
+    const material = new THREE.MeshPhysicalMaterial({
+      color: 0x166534,
+      metalness: 0.1,
+      roughness: 0.2,
+      transmission: 0.5,
+      thickness: 0.5,
+      transparent: true,
+      opacity: 0.8,
+      wireframe: true
+    });
+    sphere = new THREE.Mesh(geometry, material);
+    scene.add(sphere);
+
+    // Particle Ambiance
+    const particlesCount = 1000;
+    const posArray = new Float32Array(particlesCount * 3);
+    for(let i=0; i < particlesCount * 3; i++) {
+      posArray[i] = (Math.random() - 0.5) * 20;
+    }
+    const particlesGeo = new THREE.BufferGeometry();
+    particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    const particlesMat = new THREE.PointsMaterial({
+      size: 0.02,
+      color: 0x4ade80,
+      transparent: true,
+      opacity: 0.5
+    });
+    clouds = new THREE.Points(particlesGeo, particlesMat);
+    scene.add(clouds);
+
+    animate();
+  }
+
+  function animate() {
+    requestAnimationFrame(animate);
+    const time = clock.getElapsedTime();
+
+    if (sphere) {
+      sphere.rotation.y += 0.005;
+      sphere.rotation.x += 0.002;
+
+      // Pulse logic based on state
+      let targetScale = 1;
+      let targetOpacity = 0.8;
+      
+      if (breathingState === 'inhale') {
+        targetScale = 1.8 + Math.sin(time * 2) * 0.1;
+        targetOpacity = 0.9;
+        sphere.material.color.setHex(0x22c55e);
+      } else if (breathingState === 'hold') {
+        targetScale = 1.8;
+        targetOpacity = 1.0;
+        sphere.material.color.setHex(0xf59e0b);
+      } else if (breathingState === 'exhale') {
+        targetScale = 1;
+        targetOpacity = 0.6;
+        sphere.material.color.setHex(0x166534);
+      } else {
+        targetScale = 1 + Math.sin(time) * 0.05;
+      }
+
+      sphere.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.02);
+      sphere.material.opacity = THREE.MathUtils.lerp(sphere.material.opacity, targetOpacity, 0.05);
+    }
+
+    if (clouds) {
+      clouds.rotation.y += 0.001;
+    }
+
+    renderer.render(scene, camera);
+  }
+
+  // Handle Resize
+  window.addEventListener('resize', () => {
+    if (!renderer) return;
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth, container.clientHeight);
+  });
+
+  // TIMER & STATE LOGIC
   let breathingInterval;
   let timerInterval;
   let seconds = 0;
   
-  const circle = document.getElementById('breathing-circle');
-  const instruction = document.getElementById('instruction-text');
   const detail = document.getElementById('breathing-detail');
   const timerDisplay = document.getElementById('zen-timer');
   const startBtn = document.getElementById('start-breath');
@@ -251,6 +363,8 @@
   }
 
   function startBreathing() {
+    if (!renderer) initThree();
+    
     seconds = 0;
     timerDisplay.textContent = "00:00";
     startBtn.style.display = 'none';
@@ -260,36 +374,35 @@
     
     const runCycle = () => {
       // Inhale (4 seconds)
-      circle.style.transition = 'transform 4s ease-in-out';
-      circle.classList.add('inhale');
-      instruction.textContent = "Inhale";
-      detail.textContent = "Breathe in slowly through your nose...";
+      breathingState = 'inhale';
+      overlayText.textContent = "Inhale";
+      detail.textContent = "Breathe in slowly as the sphere expands...";
       
       setTimeout(() => {
         // Hold (7 seconds)
-        instruction.textContent = "Hold";
-        detail.textContent = "Gently pause and hold your breath...";
+        breathingState = 'hold';
+        overlayText.textContent = "Hold";
+        detail.textContent = "Pause gently, feel the energy within...";
         
         setTimeout(() => {
           // Exhale (8 seconds)
-          circle.style.transition = 'transform 8s ease-in-out';
-          circle.classList.remove('inhale');
-          instruction.textContent = "Exhale";
-          detail.textContent = "Release through your mouth with a whoosh sound...";
+          breathingState = 'exhale';
+          overlayText.textContent = "Exhale";
+          detail.textContent = "Release and contract, let go of all tension...";
         }, 7000);
       }, 4000);
     };
 
     runCycle();
-    breathingInterval = setInterval(runCycle, 19000); // 4 + 7 + 8 = 19 seconds
+    breathingInterval = setInterval(runCycle, 19000); 
   }
 
   function stopBreathing() {
     clearInterval(breathingInterval);
     clearInterval(timerInterval);
-    circle.classList.remove('inhale');
-    instruction.textContent = "Ready?";
-    detail.textContent = "Session complete. You look more peaceful already.";
+    breathingState = 'ready';
+    overlayText.textContent = "Ready?";
+    detail.textContent = "Session complete. Take a moment to feel the stillness.";
     startBtn.style.display = 'inline-block';
     stopBtn.style.display = 'none';
     startBtn.textContent = 'Restart Session';
@@ -297,4 +410,7 @@
 
   startBtn.addEventListener('click', startBreathing);
   stopBtn.addEventListener('click', stopBreathing);
+
+  // Initialize Three on load just to show the sphere
+  window.addEventListener('DOMContentLoaded', initThree);
 </script>
