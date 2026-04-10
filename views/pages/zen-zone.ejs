@@ -351,6 +351,7 @@
   // TIMER & STATE LOGIC
   let breathingInterval;
   let timerInterval;
+  let phaseTimeout1, phaseTimeout2;
   let seconds = 0;
   
   const detail = document.getElementById('breathing-detail');
@@ -384,16 +385,16 @@
       overlayText.textContent = t.nav_inhale || (lang === 'ta' ? 'சுவாசி' : (lang === 'hi' ? 'सांस लें' : 'Inhale'));
       detail.textContent = t.breath_guide;
       
-      setTimeout(() => {
+      phaseTimeout1 = setTimeout(() => {
         // Hold (7 seconds)
         breathingState = 'hold';
         overlayText.textContent = t.nav_hold || (lang === 'ta' ? 'நிறுத்து' : (lang === 'hi' ? 'रुकें' : 'Hold'));
         detail.textContent = t.breath_pause;
         
-        setTimeout(() => {
+        phaseTimeout2 = setTimeout(() => {
           // Exhale (8 seconds)
           breathingState = 'exhale';
-          overlayText.textContent = t.nav_exhale || (lang === 'ta' ? 'வெளியீடு' : (lang === 'hi' ? 'छोड़ें' : 'Exhale'));
+          overlayText.textContent = t.nav_exhale || (lang === 'ta' ? 'வெளியீடு' : (lang === 'hi' ? 'छோड़ें' : 'Exhale'));
           detail.textContent = t.breath_release;
         }, 7000);
       }, 4000);
@@ -408,6 +409,8 @@
     const t = translations[lang];
     clearInterval(breathingInterval);
     clearInterval(timerInterval);
+    clearTimeout(phaseTimeout1);
+    clearTimeout(phaseTimeout2);
     breathingState = 'ready';
     overlayText.textContent = t.breath_ready;
     detail.textContent = t.breath_ready_desc || (lang === 'ta' ? 'தயாராக இருங்கள்' : 'Ready?');
