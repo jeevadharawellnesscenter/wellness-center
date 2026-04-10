@@ -29,6 +29,7 @@
     inset: 0;
     background: linear-gradient(90deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%);
     z-index: 2;
+    pointer-events: none;
   }
   @keyframes auroraFlow {
     0% { background-position: 0% 50%; }
@@ -92,6 +93,11 @@
     opacity: 0;
     transform: translateY(30px);
     animation: fadeUp 1s ease-out 0.6s forwards;
+  }
+  .hero-buttons .btn {
+    position: relative;
+    z-index: 12;
+    pointer-events: auto;
   }
 
   @keyframes fadeUp {

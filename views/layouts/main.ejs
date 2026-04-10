@@ -112,14 +112,104 @@
     </div>
   </footer>
 
+  <style>
+    /* Zen Hub Styles */
+    #zen-hub-trigger {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #166534 0%, #064e3b 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      cursor: pointer;
+      z-index: 9999;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 2px solid rgba(255,255,255,0.1);
+    }
+    #zen-hub-trigger:hover {
+      transform: scale(1.1) rotate(15deg);
+      box-shadow: 0 15px 35px rgba(16, 185, 129, 0.4);
+    }
+    #zen-hub-panel {
+      position: fixed;
+      bottom: 100px;
+      right: 30px;
+      width: 320px;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255,255,255,0.4);
+      z-index: 9998;
+      padding: 2rem;
+      transform: translateY(20px) scale(0.95);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    #zen-hub-panel.active {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+      visibility: visible;
+    }
+    .hub-title {
+      font-family: var(--font-serif);
+      color: var(--primary-dark);
+      margin-bottom: 0.5rem;
+      font-size: 1.25rem;
+    }
+    .hub-quote {
+      font-style: italic;
+      color: var(--text-light);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    .hub-link {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem 1rem;
+      background: rgba(255,255,255,0.5);
+      border-radius: 12px;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-bottom: 0.8rem;
+      transition: all 0.2s;
+    }
+    .hub-link:hover {
+      background: white;
+      transform: translateX(5px);
+      box-shadow: var(--shadow-sm);
+    }
+  </style>
+
   <script>
     const hamburger = document.getElementById('hamburger');
     const navLinks = document.getElementById('navLinks');
+    const langSelector = document.getElementById('langSelector');
 
-    if(hamburger) {
+    if (hamburger && navLinks) {
       hamburger.addEventListener('click', () => {
         hamburger.classList.toggle('active');
         navLinks.classList.toggle('show');
+      });
+
+      // Close mobile menu when a link is clicked
+      navLinks.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => {
+          hamburger.classList.remove('active');
+          navLinks.classList.remove('show');
+        });
       });
     }
 
@@ -205,7 +295,7 @@
       });
     }
 
-    if(langSelector) {
+    if (langSelector) {
       langSelector.addEventListener('change', (e) => {
         const lang = e.target.value;
         localStorage.setItem('lang', lang);
@@ -219,88 +309,6 @@
         setTimeout(() => applyTranslations(savedLang), 50);
       }
     }
-
-
-
-    /* Zen Hub Styles */
-    #zen-hub-trigger {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 60px;
-      height: 60px;
-      background: linear-gradient(135deg, #166534 0%, #064e3b 100%);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-      cursor: pointer;
-      z-index: 9999;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      border: 2px solid rgba(255,255,255,0.1);
-    }
-    #zen-hub-trigger:hover {
-      transform: scale(1.1) rotate(15deg);
-      box-shadow: 0 15px 35px rgba(16, 185, 129, 0.4);
-    }
-    #zen-hub-panel {
-      position: fixed;
-      bottom: 100px;
-      right: 30px;
-      width: 320px;
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 24px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.1);
-      border: 1px solid rgba(255,255,255,0.4);
-      z-index: 9998;
-      padding: 2rem;
-      transform: translateY(20px) scale(0.95);
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-    }
-    #zen-hub-panel.active {
-      transform: translateY(0) scale(1);
-      opacity: 1;
-      visibility: visible;
-    }
-    .hub-title {
-      font-family: var(--font-serif);
-      color: var(--primary-dark);
-      margin-bottom: 0.5rem;
-      font-size: 1.25rem;
-    }
-    .hub-quote {
-      font-style: italic;
-      color: var(--text-light);
-      font-size: 0.9rem;
-      line-height: 1.6;
-      margin-bottom: 1.5rem;
-    }
-    .hub-link {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 0.8rem 1rem;
-      background: rgba(255,255,255,0.5);
-      border-radius: 12px;
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.85rem;
-      margin-bottom: 0.8rem;
-      transition: all 0.2s;
-    }
-    .hub-link:hover {
-      background: white;
-      transform: translateX(5px);
-      box-shadow: var(--shadow-sm);
-    }
-  </style>
 
   <!-- Zen Hub Floating Assistant -->
   <div id="zen-hub-panel">
@@ -335,19 +343,22 @@
       "Wellness is a primary connection with the self."
     ];
 
-    hubTrigger.addEventListener('click', () => {
-      hubPanel.classList.toggle('active');
-      if (hubPanel.classList.contains('active')) {
-        zenQuote.textContent = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
-      }
-    });
+    if (hubTrigger && hubPanel && zenQuote) {
+      hubTrigger.addEventListener('click', () => {
+        hubPanel.classList.toggle('active');
+        if (hubPanel.classList.contains('active')) {
+          zenQuote.textContent = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
+        }
+      });
 
-    // Close on click outside
-    document.addEventListener('click', (e) => {
-      if (!hubPanel.contains(e.target) && !hubTrigger.contains(e.target)) {
-        hubPanel.classList.remove('active');
-      }
-    });
+      // Close on click outside
+      document.addEventListener('click', (e) => {
+        if (!hubPanel.contains(e.target) && !hubTrigger.contains(e.target)) {
+          hubPanel.classList.remove('active');
+        }
+      });
+    }
+  </script>
 
 </body>
 </html>
