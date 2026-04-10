@@ -9,29 +9,26 @@
     min-height: 700px;
     display: flex;
     align-items: center;
-    background: linear-gradient(-45deg, #091a11, #132e1e, #0e3b24, #062416);
-    background-size: 400% 400%;
-    animation: auroraFlow 20s ease infinite;
+    background: url('/images/luxury-hero.png') center/cover;
     padding-top: 80px; 
     overflow: hidden;
   }
   .hero-premium::before {
     content: '';
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle at center, rgba(74, 222, 128, 0.05) 0%, transparent 50%);
-    animation: pulseGlow 10s ease-in-out infinite alternate;
+    inset: 0;
+    background: linear-gradient(-45deg, rgba(9, 26, 17, 0.4), rgba(19, 46, 30, 0.2), rgba(14, 59, 36, 0.3), rgba(6, 36, 22, 0.4));
+    background-size: 400% 400%;
+    animation: auroraFlow 20s ease infinite;
+    z-index: 1;
     pointer-events: none;
   }
   .hero-premium::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, rgba(8, 30, 18, 0.7) 0%, transparent 100%);
-    z-index: 1;
+    background: linear-gradient(90deg, rgba(8, 30, 18, 0.8) 0%, rgba(8, 30, 18, 0.2) 60%, transparent 100%);
+    z-index: 2;
   }
   @keyframes auroraFlow {
     0% { background-position: 0% 50%; }
