@@ -207,16 +207,10 @@
     }
 
     @media (max-width: 768px) {
-      /* Avoid overlap with WhatsApp floating button on mobile */
-      #zen-hub-trigger {
-        right: 20px;
-        bottom: 120px;
-      }
+      /* Keep mobile experience clean: only WhatsApp floating action */
+      #zen-hub-trigger,
       #zen-hub-panel {
-        right: 16px;
-        left: 16px;
-        width: auto;
-        bottom: 190px;
+        display: none !important;
       }
     }
   </style>
