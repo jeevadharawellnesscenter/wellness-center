@@ -386,6 +386,32 @@ main { min-height: 80vh; }
   }
   .nav-links li { width: 100%; text-align: center; margin: 15px 0; }
   .nav-links li a { font-size: 1.4rem; color: #ffffff !important; font-weight: 500; }
+  .nav-links .dropdown {
+    width: 100%;
+    padding-bottom: 0;
+  }
+  .nav-links .dropdown-content {
+    position: static;
+    left: auto;
+    top: auto;
+    min-width: 0;
+    width: 85%;
+    margin: 0.6rem auto 0;
+    display: none;
+    opacity: 1;
+    transform: none;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.97);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+  }
+  .nav-links .dropdown.open .dropdown-content {
+    display: block;
+  }
+  .nav-links .dropdown-content a {
+    color: #1a201c !important;
+    font-size: 1.15rem;
+    padding: 0.9rem 1.2rem;
+  }
   .nav-links .btn { display: inline-flex; width: auto; min-width: 200px; margin: 10px auto; }
   
   .hero h1 { font-size: 2.8rem !important; word-wrap: break-word; overflow-wrap: break-word; }

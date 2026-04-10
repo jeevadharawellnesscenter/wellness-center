@@ -204,11 +204,29 @@
         navLinks.classList.toggle('show');
       });
 
+      const servicesDropdown = navLinks.querySelector('.dropdown');
+      const servicesTrigger = servicesDropdown ? servicesDropdown.querySelector('a') : null;
+
+      if (servicesDropdown && servicesTrigger) {
+        servicesTrigger.addEventListener('click', (e) => {
+          if (window.innerWidth <= 768) {
+            e.preventDefault();
+            servicesDropdown.classList.toggle('open');
+          }
+        });
+      }
+
       // Close mobile menu when a link is clicked
       navLinks.querySelectorAll('a').forEach((link) => {
         link.addEventListener('click', () => {
+          if (servicesTrigger && link === servicesTrigger && window.innerWidth <= 768) {
+            return;
+          }
           hamburger.classList.remove('active');
           navLinks.classList.remove('show');
+          if (servicesDropdown) {
+            servicesDropdown.classList.remove('open');
+          }
         });
       });
     }
