@@ -149,32 +149,33 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <section class="zen-hero" style="color: white; color: white !important;">
   <div class="container">
-    <h1 style="font-size: clamp(3rem, 8vw, 5rem); font-family: var(--font-serif); margin-bottom: 1.5rem; color: white;">The Zen Zone</h1>
-    <p style="font-size: 1.2rem; color: rgba(255,255,255,0.8); max-width: 700px; margin: 0 auto; line-height: 1.8;">
+    <h1 data-i18n="zen_hero_title" style="font-size: clamp(3rem, 8vw, 5rem); font-family: var(--font-serif); margin-bottom: 1.5rem; color: white;">The Zen Zone</h1>
+    <p data-i18n="zen_hero_desc" style="font-size: 1.2rem; color: rgba(255,255,255,0.8); max-width: 700px; margin: 0 auto; line-height: 1.8;">
       Welcome to your sanctuary of stillness. Regulate your energy, restore your focus, and explore the wisdom of natural healing.
     </p>
   </div>
 </section>
 
 <section class="breathing-room">
-  <div class="container">
-    <div style="max-width: 600px; margin: 0 auto 3rem;">
-      <span style="color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem;">Mindfulness Practice</span>
-      <h2 style="font-family: var(--font-serif); color: var(--primary-dark); margin: 1rem 0;">Regulate Your Breath</h2>
-      <p style="color: var(--text-light); line-height: 1.6;">Use this interactive guide to practice the 4-7-8 breathing technique, a natural tranquilizer for the nervous system.</p>
+  <div class="container" style="max-width: 800px;">
+    <span style="letter-spacing: 5px; text-transform: uppercase; font-size: 0.8rem; color: var(--accent); font-weight: 600;">Mindfulness Practice</span>
+    <h2 data-i18n="breath_title" style="margin-top: 1rem; margin-bottom: 1.5rem;">Regulate Your Breath</h2>
+    <p style="color: var(--text-light); font-size: 1.1rem; line-height: 1.7;">
+      Use this interactive guide to practice the 4-7-8 breathing technique, a natural tranquilizer for the nervous system.
+    </p>
     </div>
 
     <div id="zen-timer" class="timer-display">00:00</div>
 
     <div id="three-canvas-container">
-      <div id="three-overlay-text">Ready?</div>
+      <div id="three-overlay-text" data-i18n="breath_ready">Ready?</div>
     </div>
 
-    <div class="breathing-instruction" id="breathing-detail">Press Start to begin your immersive 3D session.</div>
+    <div class="breathing-instruction" id="breathing-detail" data-i18n="breath_start_desc">Press Start to begin your immersive 3D session.</div>
 
     <div style="margin-top: 3rem; display: flex; gap: 1rem; justify-content: center;">
-      <button id="start-breath" class="btn btn-primary" style="padding: 1rem 2.5rem; border-radius: 30px;">Start Session</button>
-      <button id="stop-breath" class="btn btn-outline" style="padding: 1rem 2.5rem; border-radius: 30px; display: none;">Stop</button>
+      <button id="start-breath" data-i18n="breath_start" class="btn btn-primary" style="padding: 1rem 2.5rem; border-radius: 30px;">Start Session</button>
+      <button id="stop-breath" data-i18n="breath_stop" class="btn btn-outline" style="padding: 1rem 2.5rem; border-radius: 30px; display: none;">Stop Session</button>
     </div>
   </div>
 </section>
@@ -373,22 +374,25 @@
     timerInterval = setInterval(updateTimer, 1000);
     
     const runCycle = () => {
+      const lang = localStorage.getItem('lang') || 'en';
+      const t = translations[lang];
+
       // Inhale (4 seconds)
       breathingState = 'inhale';
-      overlayText.textContent = "Inhale";
-      detail.textContent = "Breathe in slowly as the sphere expands...";
+      overlayText.textContent = t.nav_inhale || (lang === 'ta' ? 'சுவாசி' : (lang === 'hi' ? 'सांस लें' : 'Inhale'));
+      detail.textContent = t.breath_guide;
       
       setTimeout(() => {
         // Hold (7 seconds)
         breathingState = 'hold';
-        overlayText.textContent = "Hold";
-        detail.textContent = "Pause gently, feel the energy within...";
+        overlayText.textContent = t.nav_hold || (lang === 'ta' ? 'நிறுத்து' : (lang === 'hi' ? 'रुकें' : 'Hold'));
+        detail.textContent = t.breath_pause;
         
         setTimeout(() => {
           // Exhale (8 seconds)
           breathingState = 'exhale';
-          overlayText.textContent = "Exhale";
-          detail.textContent = "Release and contract, let go of all tension...";
+          overlayText.textContent = t.nav_exhale || (lang === 'ta' ? 'வெளியீடு' : (lang === 'hi' ? 'छोड़ें' : 'Exhale'));
+          detail.textContent = t.breath_release;
         }, 7000);
       }, 4000);
     };
@@ -398,14 +402,15 @@
   }
 
   function stopBreathing() {
+    const lang = localStorage.getItem('lang') || 'en';
+    const t = translations[lang];
     clearInterval(breathingInterval);
     clearInterval(timerInterval);
     breathingState = 'ready';
-    overlayText.textContent = "Ready?";
-    detail.textContent = "Session complete. Take a moment to feel the stillness.";
+    overlayText.textContent = t.breath_ready;
+    detail.textContent = t.breath_ready_desc || (lang === 'ta' ? 'தயாராக இருங்கள்' : 'Ready?');
     startBtn.style.display = 'inline-block';
     stopBtn.style.display = 'none';
-    startBtn.textContent = 'Restart Session';
   }
 
   startBtn.addEventListener('click', startBreathing);

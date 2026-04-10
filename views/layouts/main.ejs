@@ -38,29 +38,29 @@
       </div>
 
       <ul class="nav-links" id="navLinks">
-        <li><a href="/" class="<%= currentPath === '/' ? 'active' : '' %>">Home</a></li>
-        <li><a href="/about" class="<%= currentPath === '/about' ? 'active' : '' %>">About</a></li>
+        <li><a href="/" data-i18n="nav_home" class="<%= currentPath === '/' ? 'active' : '' %>">Home</a></li>
+        <li><a href="/about" data-i18n="nav_about" class="<%= currentPath === '/about' ? 'active' : '' %>">About</a></li>
         <li class="dropdown">
-          <a href="/services" class="<%= currentPath.startsWith('/services') ? 'active' : '' %>">Services ▾</a>
+          <a href="/services" data-i18n="nav_services" class="<%= currentPath.startsWith('/services') ? 'active' : '' %>">Services ▾</a>
           <div class="dropdown-content">
-            <a href="/services/online" class="<%= currentPath === '/services/online' ? 'active' : '' %>">Online</a>
-            <a href="/services/offline" class="<%= currentPath === '/services/offline' ? 'active' : '' %>">Offline</a>
+            <a href="/services/online" data-i18n="nav_online" class="<%= currentPath === '/services/online' ? 'active' : '' %>">Online</a>
+            <a href="/services/offline" data-i18n="nav_offline" class="<%= currentPath === '/services/offline' ? 'active' : '' %>">Offline</a>
           </div>
         </li>
-        <li><a href="/blogs" class="<%= currentPath === '/blogs' ? 'active' : '' %>">Insights</a></li>
-        <li><a href="/zen-zone" class="<%= currentPath === '/zen-zone' ? 'active' : '' %>">Zen Zone</a></li>
-        <li><a href="/contact" class="<%= currentPath === '/contact' ? 'active' : '' %>">Contact</a></li>
+        <li><a href="/blogs" data-i18n="nav_insights" class="<%= currentPath === '/blogs' ? 'active' : '' %>">Insights</a></li>
+        <li><a href="/zen-zone" data-i18n="nav_zen_zone" class="<%= currentPath === '/zen-zone' ? 'active' : '' %>">Zen Zone</a></li>
+        <li><a href="/contact" data-i18n="nav_contact" class="<%= currentPath === '/contact' ? 'active' : '' %>">Contact</a></li>
 
         <% if(user) { %>
           <% if(user.role === 'admin') { %>
-            <li><a href="/admin" class="btn btn-outline nav-admin-btn <%= currentPath === '/admin' ? 'active' : '' %>">Admin Dashboard</a></li>
+            <li><a href="/admin" data-i18n="nav_admin" class="btn btn-outline nav-admin-btn <%= currentPath === '/admin' ? 'active' : '' %>">Admin Dashboard</a></li>
           <% } else { %>
-            <li><a href="/dashboard" class="btn btn-outline <%= currentPath === '/dashboard' ? 'active' : '' %>">Dashboard</a></li>
+            <li><a href="/dashboard" data-i18n="nav_dashboard" class="btn btn-outline <%= currentPath === '/dashboard' ? 'active' : '' %>">Dashboard</a></li>
           <% } %>
-          <li><a href="/api/auth/logout" class="btn btn-primary">Logout</a></li>
+          <li><a href="/api/auth/logout" data-i18n="nav_logout" class="btn btn-primary">Logout</a></li>
           <% } else { %>
-            <li><a href="/login" class="btn btn-outline <%= currentPath === '/login' ? 'active' : '' %>">Login</a></li>
-            <li><a href="/register" class="btn btn-primary nav-signup-btn <%= currentPath === '/register' ? 'active' : '' %>">Sign Up</a></li>
+            <li><a href="/login" data-i18n="nav_login" class="btn btn-outline <%= currentPath === '/login' ? 'active' : '' %>">Login</a></li>
+            <li><a href="/register" data-i18n="nav_signup" class="btn btn-primary nav-signup-btn <%= currentPath === '/register' ? 'active' : '' %>">Sign Up</a></li>
             <% } %>
 
       </ul>
@@ -143,43 +143,66 @@
 
 
 
-    // Language Translation Logic
-    const langSelector = document.getElementById('langSelector');
+    // NEW Translation Dictionary
     const translations = {
       en: {
-        home: "Home", about: "About", services: "Services ▾", contact: "Contact", 
-        login: "Login", signup: "Sign Up", logout: "Logout", dashboard: "Dashboard",
-        zen: "ZEN MODE", solar: "SOLAR MODE", zenZone: "Zen Zone"
+        nav_home: "Home", nav_about: "About", nav_services: "Services ▾", nav_online: "Online", nav_offline: "Offline",
+        nav_insights: "Insights", nav_zen_zone: "Zen Zone", nav_contact: "Contact", 
+        nav_admin: "Admin Dashboard", nav_dashboard: "Dashboard", nav_logout: "Logout", nav_login: "Login", nav_signup: "Sign Up",
+        zen_hero_title: "The Zen Zone",
+        zen_hero_desc: "Welcome to your sanctuary of stillness. Regulate your energy, restore your focus, and explore the wisdom of natural healing.",
+        breath_title: "Regulate Your Breath",
+        breath_guide: "Breathe in slowly as the sphere expands...",
+        breath_pause: "Pause gently, feel the energy within...",
+        breath_release: "Release and contract, let go of all tension...",
+        breath_start: "Start Session",
+        breath_stop: "Stop Session",
+        breath_ready: "Ready?"
       },
       ta: {
-        home: "முகப்பு", about: "எம்மைப் பற்றி", services: "சேவைகள் ▾", contact: "தொடர்பு", 
-        login: "உள்நுழை", signup: "பதிவு", logout: "வெளியேறு", dashboard: "டாஷ்போர்டு",
-        zen: "ஜென் நிலை", solar: "ஒளி நிலை", zenZone: "ஜென் மண்டலம்"
+        nav_home: "முகப்பு", nav_about: "எம்மைப் பற்றி", nav_services: "சேவைகள் ▾", nav_online: "ஆன்லைன்", nav_offline: "நேரடி",
+        nav_insights: "நுண்ணறிவு", nav_zen_zone: "ஜென் மண்டலம்", nav_contact: "தொடர்பு", 
+        nav_admin: "நிர்வாகி", nav_dashboard: "டாஷ்போர்டு", nav_logout: "வெளியேறு", nav_login: "உள்நுழை", nav_signup: "பதிவு",
+        zen_hero_title: "ஜென் மண்டலம்",
+        zen_hero_desc: "உங்கள் அமைதியின் புகலிடத்திற்கு வரவேற்கிறோம். உங்கள் ஆற்றலை ஒழுங்குபடுத்தி, உங்கள் கவனத்தை மீட்டெடுத்து, இயற்கையான குணப்படுத்துதலின் ஞானத்தை ஆராயுங்கள்.",
+        breath_title: "உங்கள் சுவாசத்தை ஒழுங்குபடுத்துங்கள்",
+        breath_guide: "சுவாசம் எடுக்கும்போது கோளம் விரிவடையும்...",
+        breath_pause: "மெதுவாக இடைநிறுத்தி, உள்ளிருக்கும் ஆற்றலை உணருங்கள்...",
+        breath_release: "சுவாசத்தை விடுத்து, அனைத்து அழுத்தங்களையும் விடுங்கள்...",
+        breath_start: "தொடங்கு",
+        breath_stop: "நிறுத்து",
+        breath_ready: "தயாரா?"
       },
       hi: {
-        home: "होम", about: "हमारे बारे में", services: "सेवाएं ▾", contact: "संपर्क", 
-        login: "लॉगिन", signup: "साइन अप", logout: "लॉगआउट", dashboard: "डैशबोर्ड",
-        zen: "ज़ेन मोड", solar: "सौर मोड", zenZone: "ज़ेन ज़ोन"
+        nav_home: "होम", nav_about: "हमारे बारे में", nav_services: "सेवाएं ▾", nav_online: "ऑनलाइन", nav_offline: "ऑफ़लाइन",
+        nav_insights: "अंतर्दृष्टि", nav_zen_zone: "ज़ेन ज़ोन", nav_contact: "संपर्क", 
+        nav_admin: "एडमिन डैशबोर्ड", nav_dashboard: "डैशबोर्ड", nav_logout: "लॉगआउट", nav_login: "लॉगिन", nav_signup: "साइन अप",
+        zen_hero_title: "ज़ेन ज़ोन",
+        zen_hero_desc: "स्थिरता के आपके अभयारण्य में आपका स्वागत है। अपनी ऊर्जा को विनियमित करें, अपना ध्यान बहाल करें, और प्राकृतिक चिकित्सा के ज्ञान का पता लगाएं।",
+        breath_title: "अपनी सांस को नियंत्रित करें",
+        breath_guide: "गोला फैलने पर धीरे-धीरे सांस लें...",
+        breath_pause: "धीरे से रुकें, भीतर की ऊर्जा को महसूस करें...",
+        breath_release: "सांस छोड़ें और सभी तनाव को दूर होने दें...",
+        breath_start: "सत्र शुरू करें",
+        breath_stop: "सत्र रोकें",
+        breath_ready: "तैयार?"
       }
     };
 
     function applyTranslations(lang) {
       const t = translations[lang];
       if(!t) return;
-      const links = document.querySelectorAll('#navLinks a');
-      links.forEach(link => {
-        const text = link.textContent.trim().toLowerCase();
-        if (text.includes('home')) link.textContent = t.home;
-        if (text.includes('about')) link.textContent = t.about;
-        if (text.includes('services')) link.textContent = t.services;
-        if (text.includes('contact')) link.textContent = t.contact;
-        if (text.includes('login')) link.textContent = t.login;
-        if (text.includes('sign up')) link.textContent = t.signup;
-        if (text.includes('logout')) link.textContent = t.logout;
-        if (text.includes('dashboard')) link.textContent = t.dashboard;
-        if (text.includes('zen zone')) link.textContent = t.zenZone;
+      
+      // Target elements with data-i18n attribute
+      const elements = document.querySelectorAll('[data-i18n]');
+      elements.forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key]) {
+          // If it's an input or button, we might want to change value/placeholder, 
+          // but for this app content is mostly textContent.
+          el.textContent = t[key];
+        }
       });
-
     }
 
     if(langSelector) {
@@ -192,7 +215,8 @@
       const savedLang = localStorage.getItem('lang');
       if (savedLang) {
         langSelector.value = savedLang;
-        setTimeout(() => applyTranslations(savedLang), 100);
+        // Immediate apply after tiny delay to ensure page elements are ready
+        setTimeout(() => applyTranslations(savedLang), 50);
       }
     }
 
