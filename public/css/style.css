@@ -108,8 +108,16 @@ ul { list-style: none; }
   position: sticky; top: 0; z-index: 5000;
   border-bottom: 1px solid var(--glass-border);
   transition: var(--transition);
+  overflow: visible !important; /* CRITICAL: Ensure mobile menu isn't clipped */
 }
-.nav-content { padding: 1.5rem 0; display: flex; justify-content: space-between; align-items: center; }
+.nav-content { 
+  padding: 1.5rem 0; 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  position: relative; /* Anchor for mobile nav Links */
+  overflow: visible !important;
+}
 .logo { font-size: 2.2rem; font-weight: 700; color: var(--primary); letter-spacing: -0.03em; }
 .logo span { color: var(--accent); }
 
@@ -355,29 +363,27 @@ main { min-height: 80vh; }
 @media (max-width: 768px) {
   .hamburger { display: flex; }
   .nav-links {
-    display: none; /* Controlled by display: flex when .show is added */
+    display: none;
     flex-direction: column; position: absolute; 
     top: 100%; left: 0; width: 100%;
     background: rgba(10, 28, 19, 0.98); 
     backdrop-filter: blur(30px);
-    overflow: hidden; 
+    overflow: visible; 
     box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-    padding: 2rem 0; border: none;
-    z-index: 4000;
+    padding: 2.5rem 0; border: none;
+    z-index: 9999; /* ABOVE EVERYTHING */
     transition: all 0.4s ease;
   }
   .nav-links.show { display: flex; animation: slideDownNav 0.4s ease forwards; }
   @keyframes slideDownNav {
-    from { opacity: 0; transform: translateY(-10px); }
+    from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  .nav-links li { width: 100%; text-align: center; margin: 12px 0; }
-  .nav-links li a { font-size: 1.25rem; color: #ffffff !important; font-weight: 500; }
+  .nav-links li { width: 100%; text-align: center; margin: 15px 0; }
+  .nav-links li a { font-size: 1.4rem; color: #ffffff !important; font-weight: 500; }
   .nav-links .btn { display: inline-flex; width: auto; min-width: 200px; margin: 10px auto; }
-  .dropdown-content { position: static; box-shadow: none; border: none; display: none; background: transparent; transform: none; }
-  .dropdown:hover .dropdown-content { display: block; }
-  .footer-content { flex-direction: column; gap: 3rem; }
-  .hero h1 { font-size: 3.2rem; }
+  
+  .hero h1 { font-size: 2.8rem !important; word-wrap: break-word; overflow-wrap: break-word; }
   .section { padding: 4rem 0; }
   .auth-card { padding: 2.5rem 1.5rem; border-radius: 24px; }
   .dash-content { padding: 2.5rem 1.5rem; border-radius: 20px; }
