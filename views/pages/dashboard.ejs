@@ -14,6 +14,43 @@
         <li><a href="/profile">Profile Settings</a></li>
       </ul>
     </aside>
+    <style>
+      .roadmap-node {
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        padding: 1.5rem;
+        border-radius: 16px;
+        border: 1px solid transparent;
+      }
+      .roadmap-node:hover {
+        background: rgba(207,157,64,0.03);
+        border-color: rgba(207,157,64,0.1);
+        transform: translateX(10px);
+      }
+      .roadmap-node:hover .node-circle {
+        transform: scale(1.3);
+        box-shadow: 0 0 25px var(--accent), 0 0 50px rgba(207,157,64,0.3);
+      }
+      .node-circle {
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      .roadmap-node.active::after {
+        content: '';
+        position: absolute;
+        left: -44px;
+        top: 5px;
+        width: 22px;
+        height: 22px;
+        background: var(--accent);
+        border-radius: 50%;
+        filter: blur(8px);
+        opacity: 0.5;
+        animation: pulseDust 2s infinite alternate;
+      }
+      @keyframes pulseDust {
+        from { transform: scale(1); opacity: 0.3; }
+        to { transform: scale(1.8); opacity: 0.1; }
+      }
+    </style>
 
     <main class="dash-content">
       <h3 style="margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 1rem;">Upcoming Appointments</h3>
