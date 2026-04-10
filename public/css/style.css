@@ -369,25 +369,33 @@ main { min-height: 80vh; }
   .hamburger { display: flex; }
   .nav-links {
     display: none;
-    flex-direction: column; position: absolute; 
-    top: 100%; left: 0; width: 100%;
+    flex-direction: column;
+    position: fixed;
+    top: 86px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: calc(100vh - 86px);
     background: rgba(10, 28, 19, 0.98); 
     backdrop-filter: blur(30px);
-    overflow: visible; 
+    overflow: visible;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-    padding: 1.5rem 0 2.8rem; border: none;
+    padding: 1.2rem 0 4.5rem;
+    border: none;
     z-index: 9999; /* ABOVE EVERYTHING */
     transition: all 0.4s ease;
-    max-height: calc(100vh - 84px);
+    max-height: none;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
   .nav-links.show { display: flex; animation: slideDownNav 0.4s ease forwards; }
   @keyframes slideDownNav {
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  .nav-links li { width: 100%; text-align: center; margin: 10px 0; }
+  .nav-links li { width: 100%; text-align: center; margin: 8px 0; }
+  .nav-links li:last-child { margin-bottom: 1.25rem; }
   .nav-links li a { font-size: 1.4rem; color: #ffffff !important; font-weight: 500; }
   .nav-links .dropdown {
     width: 100%;
@@ -415,7 +423,21 @@ main { min-height: 80vh; }
     font-size: 1.15rem;
     padding: 0.9rem 1.2rem;
   }
-  .nav-links .btn { display: inline-flex; width: auto; min-width: 200px; margin: 8px auto; }
+  .nav-links .btn {
+    display: inline-flex;
+    width: min(88%, 320px);
+    min-width: 200px;
+    margin: 6px auto;
+    justify-content: center;
+  }
+  .nav-links .btn-outline {
+    border-color: rgba(255, 255, 255, 0.6);
+    color: #ffffff !important;
+  }
+  .nav-links .btn-primary {
+    background: var(--accent);
+    color: #ffffff !important;
+  }
   
   .hero h1 { font-size: 2.8rem !important; word-wrap: break-word; overflow-wrap: break-word; }
   .section { padding: 4rem 0; }
