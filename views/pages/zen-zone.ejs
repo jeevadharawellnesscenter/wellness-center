@@ -378,6 +378,20 @@
     const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
     const secs = (seconds % 60).toString().padStart(2, '0');
     timerDisplay.textContent = `${mins}:${secs}`;
+
+    // Integrated Audio Swells (Intensity follows breath)
+    if (audioCtx && audioActive && gainNode && filter) {
+      const now = audioCtx.currentTime;
+      if (breathingState === 'inhale') {
+        gainNode.gain.setTargetAtTime(0.5, now, 0.5);
+        filter.frequency.setTargetAtTime(1200, now, 1.5);
+      } else if (breathingState === 'hold') {
+        gainNode.gain.setTargetAtTime(0.3, now, 0.5);
+      } else if (breathingState === 'exhale') {
+        gainNode.gain.setTargetAtTime(0.1, now, 0.5);
+        filter.frequency.setTargetAtTime(300, now, 2);
+      }
+    }
   }
 
   function startBreathing() {
@@ -428,6 +442,13 @@
     detail.textContent = t.breath_ready_desc || (lang === 'ta' ? 'தயாராக இருங்கள்' : 'Ready?');
     startBtn.style.display = 'inline-block';
     stopBtn.style.display = 'none';
+
+    // Fade out audio on stop
+    if (audioCtx && gainNode && omGain) {
+      const now = audioCtx.currentTime;
+      gainNode.gain.setTargetAtTime(0, now, 0.5);
+      omGain.gain.setTargetAtTime(0, now, 0.5);
+    }
   }
 
   // Procedural Zen Audio Engine (Web Audio API)
@@ -507,37 +528,13 @@
     }
   }
 
-  soundSelector.addEventListener('change', updateAudio);
-  audioToggle.addEventListener('click', () => {
-    audioEnabled = !audioEnabled;
-    audioToggle.style.opacity = audioEnabled ? '1' : '0.4';
-    updateAudio();
-  });
-
-  // Modify updateTimer to handle Audio Swells (Intensity follows breath)
-  const originalUpdateTimer = updateTimer;
-  updateTimer = function() {
-    originalUpdateTimer();
-    
-    if (audioCtx && audioActive) {
-      const now = audioCtx.currentTime;
-      if (breathingState === 'inhale') {
-        gainNode.gain.setTargetAtTime(0.5, now, 0.5);
-        filter.frequency.setTargetAtTime(1200, now, 1.5);
-      } else if (breathingState === 'hold') {
-        gainNode.gain.setTargetAtTime(0.3, now, 0.5);
-      } else if (breathingState === 'exhale') {
-        gainNode.gain.setTargetAtTime(0.1, now, 0.5);
-        filter.frequency.setTargetAtTime(300, now, 2);
-      }
-    }
-  };
-
+  // Single Start Listener
   startBtn.addEventListener('click', () => {
     initAudioEngine();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
     startBreathing();
   });
+  
   stopBtn.addEventListener('click', stopBreathing);
 
   // Initialize Three on load just to show the sphere
