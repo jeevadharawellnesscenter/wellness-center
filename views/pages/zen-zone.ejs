@@ -21,13 +21,14 @@
 
   .breathing-room {
     padding: 6rem 0;
-    background: #fdfdfd;
+    background: radial-gradient(circle at center, #102a1d 0%, #050f0a 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     position: relative;
     overflow: hidden;
+    min-height: 80vh;
   }
 
   /* Three.js Container */
@@ -43,7 +44,7 @@
   .breathing-instruction {
     font-size: 1.5rem;
     font-family: var(--font-serif);
-    color: var(--primary-dark);
+    color: rgba(255,255,255,0.7);
     margin-top: 1rem;
     min-height: 2rem;
     position: relative;
@@ -141,8 +142,9 @@
   .timer-display {
     font-size: 3rem;
     font-family: var(--font-serif);
-    color: var(--primary);
+    color: var(--accent);
     margin-bottom: 1rem;
+    text-shadow: 0 0 15px rgba(207,157,64,0.3);
   }
 </style>
 
@@ -173,26 +175,9 @@
 
     <div class="breathing-instruction" id="breathing-detail" data-i18n="breath_start_desc">Press Start to begin your immersive 3D session.</div>
 
-    <div style="margin-top: 3rem; display: flex; flex-direction: column; align-items: center; gap: 1.5rem;">
-      <div style="display: flex; gap: 1rem; justify-content: center;">
-        <button id="start-breath" data-i18n="breath_start" class="btn btn-primary" style="padding: 1rem 2.5rem; border-radius: 30px;">Start Session</button>
-        <button id="stop-breath" data-i18n="breath_stop" class="btn btn-outline" style="padding: 1rem 2.5rem; border-radius: 30px; display: none;">Stop Session</button>
-      </div>
-      
-      <!-- Audio Controller -->
-      <div id="audio-control-container" style="display: flex; align-items: center; gap: 1rem; background: var(--white); padding: 0.8rem 1.5rem; border-radius: 100px; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.05);">
-        <span style="font-size: 0.8rem; color: var(--text-light); font-weight: 500;">Ambient Sound:</span>
-        <select id="sound-selector" style="background: none; border: none; font-family: var(--font-sans); color: var(--primary); font-weight: 600; cursor: pointer; outline: none;">
-          <option value="none">Silence</option>
-          <option value="rain">Rainforest Rain</option>
-          <option value="forest">Early Morning Forest</option>
-          <option value="zen">Deep Zen Bowls</option>
-        </select>
-        <div style="width: 1px; height: 15px; background: rgba(0,0,0,0.1);"></div>
-        <button id="audio-toggle" style="background: none; border: none; cursor: pointer; color: var(--accent); transition: var(--transition);">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
-        </button>
-      </div>
+    <div style="margin-top: 3rem; display: flex; gap: 1rem; justify-content: center; position: relative; z-index: 20;">
+        <button id="start-breath" data-i18n="breath_start" class="btn btn-primary" style="padding: 1rem 2.5rem; border-radius: 30px; box-shadow: 0 0 20px rgba(207,157,64,0.2);">Start Session</button>
+        <button id="stop-breath" data-i18n="breath_stop" class="btn btn-outline" style="padding: 1rem 2.5rem; border-radius: 30px; display: none; color: white; border-color: white;">Stop Session</button>
     </div>
   </div>
 </section>
@@ -378,17 +363,6 @@
     const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
     const secs = (seconds % 60).toString().padStart(2, '0');
     timerDisplay.textContent = `${mins}:${secs}`;
-
-    // Integrated Audio Swells (Intensity follows breath)
-    if (currentAudio && audioActive) {
-      if (breathingState === 'inhale') {
-        currentAudio.volume = Math.min(currentAudio.volume + 0.1, 0.8);
-      } else if (breathingState === 'hold') {
-        currentAudio.volume = 0.5;
-      } else if (breathingState === 'exhale') {
-        currentAudio.volume = Math.max(currentAudio.volume - 0.1, 0.2);
-      }
-    }
   }
 
   function startBreathing() {
@@ -439,65 +413,9 @@
     detail.textContent = t.breath_ready_desc || (lang === 'ta' ? 'தயாராக இருங்கள்' : 'Ready?');
     startBtn.style.display = 'inline-block';
     stopBtn.style.display = 'none';
-
-    // Fade out audio on stop
-    if (audioCtx && gainNode && omGain) {
-      const now = audioCtx.currentTime;
-      gainNode.gain.setTargetAtTime(0, now, 0.5);
-      omGain.gain.setTargetAtTime(0, now, 0.5);
-    }
   }
 
-  // High-Fidelity Local Audio Engine
-  let audioCtx = null;
-  let currentAudio = null;
-  let audioActive = false;
-
-  const audioMap = {
-    rain: '/audio/rain.mp3',
-    forest: '/audio/forest.mp3',
-    zen: '/audio/zen.mp3'
-  };
-
-  function initAudioEngine() {
-    if (audioCtx) return;
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
-
-  function updateAudio() {
-    initAudioEngine();
-    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-
-    if (currentAudio) {
-      currentAudio.pause();
-      currentAudio = null;
-    }
-    
-    const val = soundSelector.value;
-    audioActive = (val !== 'none' && audioEnabled);
-    
-    if (audioActive) {
-      currentAudio = new Audio(audioMap[val]);
-      currentAudio.loop = true;
-      currentAudio.volume = 0.3;
-      currentAudio.play().catch(e => console.error("Audio Playback Error:", e));
-    }
-  }
-
-  soundSelector.addEventListener('change', updateAudio);
-  audioToggle.addEventListener('click', () => {
-    audioEnabled = !audioEnabled;
-    audioToggle.style.opacity = audioEnabled ? '1' : '0.4';
-    updateAudio();
-  });
-
-  // Single Start Listener
-  startBtn.addEventListener('click', () => {
-    initAudioEngine();
-    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-    startBreathing();
-  });
-  
+  startBtn.addEventListener('click', startBreathing);
   stopBtn.addEventListener('click', stopBreathing);
 
   // Initialize Three on load just to show the sphere
